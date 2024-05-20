@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
     <head>
-        <title>STUDENT LIFE INFORMATION SYSTEM</title>
+        <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link
         rel="stylesheet"
@@ -11,7 +11,7 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer"
         />
-        <link rel="stylesheet" href="{% static 'stylesheet/counseling_app.css'%}">
+        <link rel="stylesheet" href="{% static 'stylesheet/main.css'%}">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {% block headcontent %}
 
@@ -142,13 +142,10 @@
                 <input type="text" placeholder="Search...">
             </div>
             <main class="main_content">
-                <h2> This is main content</h2>
+                {% block bodycontent %}{% endblock %}
             </main>
         </div>
         
-        {% block bodycontent %}
-
-        {% endblock bodycontent %}
 
        <script src="{% static 'scripts/main.js'%}"></script>
     </body>
