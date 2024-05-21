@@ -18,11 +18,6 @@
     width: 100%;
     border: 1px solid #e2e2e2;
     border-radius: 10px;
-}
-.form-container form{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
     gap: 10px;
 }
 #search_id{
@@ -81,33 +76,34 @@
 #info_table_head{
     background-color: #f1f1f1;
 }
-#requestScheduleContainer{
+.accepted, .declined, .pending, .expired{
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    width: 100px;
     align-items: center;
-    gap: 10px;
     padding: 9.6px;
+    border-radius: 5px;
 }
-#requestScheduleContainer input, select{
+.accept, .decline, .delete{
+    border: none;
+    border-radius: 5px;
+    width: 80px;
+    height: 20px;
+    margin: 2px;
+    align-items: center;
+    border-radius: 5px;
+}
+.accepted, .accept{
+    background-color: #16ad2a;
+    color: #ffffff;
+}
+.declined, .decline, .delete{
+    background-color: #ce0b0b;
+    color: #ffffff;
+}
+.pending{
+    background-color: #f3e51d;
+}
+.expired{
     background-color: #DDDFEE;
-    padding: 9.6px;
-    border: transparent;
-    border-radius: 10px;
-    box-sizing: border-box;
-    padding-left: 10px;
-    align-items: left;
-    color: black;
-    width: 250px;
-}
-#datetimepicker{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-#datetimepicker input, #datetimepicker select{
-    width: 150px;
-}
-.hidden{
-    display: none !important;
 }

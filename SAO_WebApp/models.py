@@ -1,19 +1,43 @@
 from django.db import models
 
+
+class studentInfo(models.Model):
+    studID = models.IntegerField(primary_key=True)
+    lrn = models.CharField(max_length=12)
+    lastname = models.CharField(max_length=100)
+    firstname = models.CharField(max_length=100)
+    middlename = models.CharField(max_length=50)
+    degree = models.CharField(max_length=150)
+    yearlvl = models.CharField(max_length=10)
+    sex=models.CharField(max_length=10)
+    emailadd= models.EmailField()
+    contact= models.CharField(max_length=11)
+
 class counseling_schedule(models.Model):
-    counselingID = models.CharField(primary_key=True, max_length=255)
-    firstname = models.CharField(max_length=255)
-    lastname = models.CharField(max_length=255)
+    counselingID = models.AutoField(primary_key=True)
+    dateRecieved = models.DateField()
+    studentID = models.ForeignKey(studentInfo,on_delete=models.CASCADE)
     reason = models.CharField(max_length=255)
-    teachers = [
-        ('teacher 1','Teacher 1'),
-        ('teacher 2','Teacher 2'),
-        ('teacher 3','Teacher 3'),
-        ('teacher 4','Teacher 4'),
+    scheduled_date = models.DateField()
+    time = [
+        ('8-9', '8:00 AM - 9:00 AM'),
+        ('9-10', '9:00 AM - 10:00 AM'),
+        ('10-11', '10:00 AM-11:00 AM'),
+        ('11-12', '11:00 AM -12:00 PM'),
+        ('1-2','1:00 PM - 2:00 PM'),
+        ('2-3','2:00 PM - 3:00 PM'),
+        ('3-4','3:00 PM - 4:00 PM'),
+        ('4-5','4:00 PM - 5:00 PM'),
     ]
-    counselor_teacher = models.CharField(max_length=255, choices=teachers)
-    scheduled_datetime = models.DateTimeField()
-    status = models.BooleanField(default=False)
+    scheduled_time = models.CharField(max_length=15, choices=time)
+    email = models.EmailField()
+    approval_status = [
+        ('Accepted' , 'Accepted'),
+        ('Declined' , 'Declined'),
+        ('Pending' , 'Pending'),
+        ('Expired' , 'Expired')
+    ]
+    status = models.CharField(max_length=10, choices=approval_status, default='Pending')
 
 class IndividualProfileBasicInfo(models.Model):
 

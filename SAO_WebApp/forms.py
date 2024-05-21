@@ -1,29 +1,31 @@
 from django import forms
 from SAO_WebApp.models import counseling_schedule, IndividualProfileBasicInfo, FileUploadTest
+from datetime import date
 
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
 
-class DateTimeInput(forms.DateTimeInput):
-    input_type = 'datetime-local'
 
 
 class CounselingSchedulerForm(forms.ModelForm):
-
-    teachers = [
-        ('teacher 1','Teacher 1'),
-        ('teacher 2','Teacher 2'),
-        ('teacher 3','Teacher 3'),
-        ('teacher 4','Teacher 4'),
-    ]
-    counselor_teacher = forms.ChoiceField(choices=teachers) 
-    scheduled_datetime = forms.DateTimeField(widget=DateTimeInput)   
-    reason = forms.CharField(widget=forms.Textarea(attrs={'style': 'resize:none;'}))
-    def __init__(self, *args, **kwargs):
-        super(CounselingSchedulerForm, self).__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.required = True
     class Meta:
         model = counseling_schedule
-        fields = '__all__'
+        fields = ['reason', 'scheduled_date', 'scheduled_time', 'email']
+        widgets = {
+            'reason': forms.TextInput(attrs={
+                'placeholder': 'Enter a reason for counseling'
+            }),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email address.'
+            }),
+            'scheduled_date': forms.DateInput(attrs={
+                'type': 'date',
+                'min': date.today().isoformat(),
+                'placeholder': 'Select a date'
+            }),
+            'scheduled_time': forms.Select(attrs={'disabled': 'disabled'})
+        }
+
 
 class IndividualProfileForm(forms.ModelForm):
     schoolTypeChoices = [
