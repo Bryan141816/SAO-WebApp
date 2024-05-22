@@ -18,6 +18,7 @@
     width: 100%;
     border: 1px solid #e2e2e2;
     border-radius: 10px;
+    gap: 10px;
 }
 .form-container form{
     display: flex;
@@ -50,7 +51,7 @@
     padding-left: 10px;
     align-items: left;
     color: black;
-    max-width: 200px;
+    width: 200px;
 }
 .OrangeButton{
     background-color: #FF8000;
@@ -81,6 +82,35 @@
 #info_table_head{
     background-color: #f1f1f1;
 }
+
+
+#info_table2 {
+    border-collapse: collapse;
+    width: 100%; 
+}
+#info_table2 th {
+    padding: 9.6px;
+    margin: 0; 
+    text-align: left;
+    color: #FF8000;
+}
+#info_table2 td{
+    margin: 0; 
+    text-align: left;
+}
+#info_table2 tr{
+    border-bottom: 1px solid #e2e2e2;
+}
+#info_table2_head{
+    background-color: #f1f1f1;
+}
+.smallarea{
+    width: 20%;
+}
+#info_table2 input{
+    height: 35px;
+    width: 100%;
+}
 #requestScheduleContainer{
     display: flex;
     flex-direction: row;
@@ -88,7 +118,24 @@
     gap: 10px;
     padding: 9.6px;
 }
-#requestScheduleContainer input, select{
+.hidden{
+    display: none !important;
+}
+.questions{
+    padding: 40px;
+}
+.questions div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px;
+}
+.twocolumn{
+    display: flex;
+    flex-direction: column;
+}
+.twocolumn input,.twocolumn textarea, #id_dateEnrolled, .twocolumn select{
+    resize: none;
     background-color: #DDDFEE;
     padding: 9.6px;
     border: transparent;
@@ -97,20 +144,20 @@
     padding-left: 10px;
     align-items: left;
     color: black;
-    max-width: 250px;
+    width: auto;
 }
-#requestForm{
+.yes_no{
     display: flex;
-}
-#datetimepicker{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     gap: 10px;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
 }
-#datetimepicker input, #datetimepicker select{
-    max-width: 150px;
-}
-.hidden{
-    display: none !important;
+.yes_no label{
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+    padding: 0;
+    gap: 5px;
+    flex-direction: row;
 }

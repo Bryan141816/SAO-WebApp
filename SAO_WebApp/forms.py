@@ -1,5 +1,5 @@
 from django import forms
-from SAO_WebApp.models import counseling_schedule, IndividualProfileBasicInfo, FileUploadTest
+from SAO_WebApp.models import counseling_schedule, IndividualProfileBasicInfo, FileUploadTest, exit_interview_db, OjtAssessment
 from datetime import date
 
 class UploadFileForm(forms.Form):
@@ -25,6 +25,38 @@ class CounselingSchedulerForm(forms.ModelForm):
             }),
             'scheduled_time': forms.Select(attrs={'disabled': 'disabled'})
         }
+class OjtAssessmentForm(forms.ModelForm):
+    class Meta:
+        model = OjtAssessment
+        fields = ['schoolYear']
+
+class ExitInterviewForm(forms.ModelForm):
+    yes_no =[
+        (True,'Yes'),
+        (False,'No'),
+    ]
+    satisfiedWithAcadamic = forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    satisfiedWithSocial = forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    satisfiedWithServices = forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    recommend =forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    accademicExperienceSatisfied =forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    currentlyEmployed =forms.ChoiceField(choices=yes_no, widget=forms.RadioSelect(attrs={'class': 'yes_no'}))
+    class Meta:
+        model = exit_interview_db
+        exclude = ['exitinterviewId','studentID','date','contributedToDecision', 'dateRecieved','status']
+        widgets ={
+            'dateEnrolled': forms.DateInput(attrs={'type':'date'}),
+            'reasonForLeaving': forms.Textarea(),
+            'feedbackWithAcademic': forms.Textarea(),
+            'feedbackWithSocial': forms.Textarea(),
+            'feedbackWithServices': forms.Textarea(),
+            'firstConsider': forms.Textarea(),
+            'whatCondition': forms.Textarea(),
+            'planTOReturn': forms.Textarea(),
+            'knowAboutYourTime': forms.Textarea(),
+            'explainationEmployed': forms.Textarea(),
+        }
+
 
 
 class IndividualProfileForm(forms.ModelForm):

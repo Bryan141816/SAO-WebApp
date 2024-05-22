@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class studentInfo(models.Model):
@@ -12,6 +13,83 @@ class studentInfo(models.Model):
     sex=models.CharField(max_length=10)
     emailadd= models.EmailField()
     contact= models.CharField(max_length=11)
+
+class exit_interview_db(models.Model):
+    exitinterviewId = models.AutoField(primary_key=True)
+    studentID = models.ForeignKey(studentInfo,on_delete=models.CASCADE)
+    dateRecieved = models.DateField()
+    date = models.DateField()
+    dateEnrolled = models.DateField()
+    reasonForLeaving = models.CharField(max_length=255)
+    satisfiedWithAcadamic = models.BooleanField(default=False)
+    feedbackWithAcademic = models.CharField(max_length=255)
+    satisfiedWithSocial = models.BooleanField(default=False)
+    feedbackWithSocial = models.CharField(max_length=255)
+    satisfiedWithServices = models.BooleanField(default=False)
+    feedbackWithServices = models.CharField(max_length=255)
+    contributedToDecision = models.JSONField()
+    intendedMajor = models.CharField(max_length=255)
+    firstConsider = models.CharField(max_length=255)
+    whatCondition = models.CharField(max_length=255)
+
+    recommend = models.BooleanField(default=False)
+    howSatisfiedChoices = [
+        ('very satisfied','Very satisfied'),
+        ('somewhat satisfied','Somewhat satisfied'),
+        ('satisfied','Satisfied'),
+        ('somewhat dissatisfied', 'Somewhat Dissatisfied'),
+        ('very dissatisfied', 'Very Dissatisfied'),
+    ]
+    howSatisfied = models.CharField(max_length=30, choices=howSatisfiedChoices)
+    planTOReturn = models.CharField(max_length=255)
+    accademicExperienceSatisfied = models.BooleanField(default=False)
+    knowAboutYourTime = models.CharField(max_length=255)
+    currentlyEmployed = models.BooleanField(default=False)
+    explainationEmployed = models.CharField(max_length=255)
+    approval_status = [
+        ('Accepted' , 'Accepted'),
+        ('Declined' , 'Declined'),
+        ('Pending' , 'Pending'),
+        ('Expired' , 'Expired')
+    ]
+    status = models.CharField(max_length=10, choices=approval_status, default='Pending')
+    
+
+class OjtAssessment(models.Model):
+    OjtRequestID = models.AutoField(primary_key=True)
+    studentID = models.ForeignKey(studentInfo, on_delete=models.CASCADE)
+    dateRecieved = models.DateField()
+    schoolYearChoices = [
+        ('2020-2021','2020-2021'),
+        ('2021-2022','2021-2022'),
+        ('2022-2023','2022-2023'),
+        ('2023-2024','2023-2024'),
+        ('2024-2025','2024-2025'),
+        ('2025-2026','2025-2026'),
+        ('2026-2027','2026-2027'),
+        ('2027-2028','2027-2028'),
+        ('2028-2029','2028-2029'),
+        ('2029-2030','2029-2030'),
+        ('2030-2031','2030-2031'),
+        ('2031-2032','2031-2032'),
+        ('2032-2033','2032-2033'),
+        ('2033-2034','2033-2034'),
+        ('2034-2035','2034-2035'),
+        ('2035-2036','2035-2036'),
+        ('2036-2037','2036-2037'),
+        ('2037-2038','2037-2038'),
+        ('2038-2039','2038-2039'),
+        ('2039-2040','2039-2040'),
+        ('2040-2041','2040-2041'),
+    ]
+    schoolYear = models.CharField(max_length=10, choices=schoolYearChoices)
+    approval_status = [
+        ('Accepted' , 'Accepted'),
+        ('Declined' , 'Declined'),
+        ('Pending' , 'Pending'),
+        ('Expired' , 'Expired')
+    ]
+    status = models.CharField(max_length=10, choices=approval_status, default='Pending')
 
 class counseling_schedule(models.Model):
     counselingID = models.AutoField(primary_key=True)

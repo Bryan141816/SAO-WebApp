@@ -76,6 +76,11 @@
 #info_table_head{
     background-color: #f1f1f1;
 }
+.horizontal{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
 .accepted, .declined, .pending, .expired{
     display: flex;
     justify-content: center;
@@ -89,7 +94,6 @@
     border-radius: 5px;
     width: 80px;
     height: 20px;
-    margin: 2px;
     align-items: center;
     border-radius: 5px;
 }

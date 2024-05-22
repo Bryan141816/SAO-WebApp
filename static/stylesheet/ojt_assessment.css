@@ -50,7 +50,7 @@
     padding-left: 10px;
     align-items: left;
     color: black;
-    max-width: 200px;
+    width: 200px;
 }
 .OrangeButton{
     background-color: #FF8000;
@@ -81,15 +81,16 @@
 #info_table_head{
     background-color: #f1f1f1;
 }
-#requestScheduleContainer{
+#requestForm{
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    width: 50%;
     padding: 9.6px;
 }
-#requestScheduleContainer input, select{
+#requestForm select{
     background-color: #DDDFEE;
+
     padding: 9.6px;
     border: transparent;
     border-radius: 10px;
@@ -97,19 +98,16 @@
     padding-left: 10px;
     align-items: left;
     color: black;
-    max-width: 250px;
-}
-#requestForm{
-    display: flex;
-}
-#datetimepicker{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-#datetimepicker input, #datetimepicker select{
-    max-width: 150px;
+    width: 200px;    background-color: #DDDFEE;
+
+    padding: 9.6px;
+    border: transparent;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    align-items: left;
+    color: black;
+    width: 200px;
 }
 .hidden{
     display: none !important;

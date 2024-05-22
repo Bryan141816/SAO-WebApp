@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import IndividualProfileBasicInfo, TestArray,FileUploadTest, counseling_schedule, studentInfo
+from .models import IndividualProfileBasicInfo, TestArray,FileUploadTest, counseling_schedule, studentInfo, exit_interview_db, OjtAssessment
 
 class IndividualProfileBasicInfoAdmin(admin.ModelAdmin):
     def __init__(self, model, admin_site):
@@ -17,6 +17,63 @@ class counselingSceduleAdmin(admin.ModelAdmin):
     list_display = ('counselingID','dateRecieved','studentID','reason','scheduled_date','scheduled_time','email','status')
     list_editable = ('dateRecieved','reason','scheduled_date','scheduled_time','email','status')
 
+class OjtAssessmentAdmin(admin.ModelAdmin):
+    list_display = ['OjtRequestID','studentID','dateRecieved','schoolYear','status']
+    list_editable = ['schoolYear','status']
+
+class exitInterviewAdmine(admin.ModelAdmin):
+    list_display = (
+        'exitinterviewId',
+        'studentID',
+        'dateRecieved',
+        'date',
+        'dateEnrolled',
+        'reasonForLeaving',
+        'satisfiedWithAcadamic',
+        'feedbackWithAcademic',
+        'satisfiedWithSocial',
+        'feedbackWithSocial',
+        'satisfiedWithServices',
+        'feedbackWithServices',
+        'contributedToDecision',
+        'intendedMajor',
+        'firstConsider',
+        'whatCondition',
+        'recommend',
+        'howSatisfied',
+        'planTOReturn',
+        'accademicExperienceSatisfied',
+        'knowAboutYourTime',
+        'currentlyEmployed',
+        'explainationEmployed',
+        'status'
+    )
+    list_editable = (
+        'date',
+        'dateEnrolled',
+        'reasonForLeaving',
+        'satisfiedWithAcadamic',
+        'feedbackWithAcademic',
+        'satisfiedWithSocial',
+        'feedbackWithSocial',
+        'satisfiedWithServices',
+        'feedbackWithServices',
+        'intendedMajor',
+        'firstConsider',
+        'whatCondition',
+        'recommend',
+        'howSatisfied',
+        'planTOReturn',
+        'accademicExperienceSatisfied',
+        'knowAboutYourTime',
+        'currentlyEmployed',
+        'explainationEmployed',
+        'status'
+    )
+
+
 
 admin.site.register(studentInfo, StudentInfoAdmin)
 admin.site.register(counseling_schedule, counselingSceduleAdmin)
+admin.site.register(exit_interview_db, exitInterviewAdmine)
+admin.site.register(OjtAssessment,OjtAssessmentAdmin)

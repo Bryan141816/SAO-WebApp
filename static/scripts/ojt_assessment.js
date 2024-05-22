@@ -43,15 +43,13 @@ $(document).ready(function(){
                 $('#info_table').append(
                     '<tr id="info_table_head">'+
                     '<th>NAME</th>'+
-                    '<th>PROGRAM/YEAR AND SECTION</th>'+
-                    '<th>CONTACT NO.</th>'+
+                    '<th>COURSE</th>'+
                     '</tr>'
                 );
                 $('#info_table').append(
                     '<tr>' +
                     '<td>' + response.name + '</td>' +
-                    '<td>' + `${response.program} ${response.year}` + '</td>' +
-                    '<td>' + '0' + response.contact_number + '</td>' +
+                    '<td>' + response.program+ '</td>' +
                     '</tr>'
                 );
             },
@@ -67,42 +65,4 @@ $(document).ready(function(){
             }
         });
     });
-    $('#id_scheduled_date').on('change', function() {
-        if ($(this).val()) {
-            $('#id_scheduled_time').prop('disabled', false);
-            let selectedDate = $(this).val();
-            let csrftoken = getCookie('csrftoken');
-            // Make a POST request
-            $.post({
-                url: '/check_date_time_validity/',
-                data: { selected_date: selectedDate },
-                beforeSend: function(xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                },
-                headers: {'X-CSRFToken': csrftoken}, 
-                success: function(response) {
-                    let disabledTimes = response.counseling_schedules;
-                    $('#id_scheduled_time option').prop('disabled', false); // Enable all options initially
-                    $('#id_scheduled_time option').prop('disabled', false).text(function () {
-                        return $(this).text().replace(' (occupied)', ''); // Remove existing "(occupied)" text
-                    }); // Enable all options initially
-                    console.log(response)
-                    $.each(disabledTimes, function(index, value) {
-                        if (value.status !== 'declined') {
-                            $('#id_scheduled_time option[value="' + value.scheduled_time + '"]').prop('disabled', true).text(function (index, text) {
-                                return text + ' (occupied)'; // Append "(occupied)" to disabled options
-                            });
-                        }
-                    });
-                },
-                error: function(xhr, status, error) {
-                    // Handle error if needed
-                }
-            });
-        } else {
-            $('#id_scheduled_time').prop('disabled', true);
-            $('#id_scheduled_time').val(''); 
-        }
-    });
-    
 });

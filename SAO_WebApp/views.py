@@ -3,8 +3,8 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from SAO_WebApp.forms import CounselingSchedulerForm, IndividualProfileForm, FileUpload, UploadFileForm
-from .models import TestArray, studentInfo, counseling_schedule
+from SAO_WebApp.forms import CounselingSchedulerForm, IndividualProfileForm, FileUpload, UploadFileForm, ExitInterviewForm, OjtAssessmentForm
+from .models import TestArray, studentInfo, counseling_schedule, exit_interview_db, OjtAssessment
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -185,7 +185,8 @@ def search_student_info(request):
             response = {
 				'student_id': student.studID,
 				'name': f"{student.lastname}, {student.firstname}",
-				'program_and_section': f"{student.degree} {student.yearlvl}",
+				'program':student.degree,
+                'year':student.yearlvl,
 				'contact_number': student.contact,
 				'email': student.emailadd
         	}
@@ -207,3 +208,93 @@ def check_date_time_validity(request):
         except ValueError:
             # Handle invalid date format
             return JsonResponse({'error': 'Invalid date format'}, status=400)
+
+def exit_interview(request):
+    if request.method == 'POST':
+        form = ExitInterviewForm(request.POST)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            fields = [
+                'academically_too_challenging',
+                'not_academically_challenging_enough',
+                'does_not_offer_my_academic_major',
+                'size_of_the_school',
+                'location_of_the_school',
+                'negative_social_campus_climate',
+                'residence_hall_environment_not_positive',
+                'social_environment_not_diverse_enough',
+                'not_enough_campus_activities',
+                'needed_more_academic_support',
+                'financial',
+                'medical_injury',
+            ]
+            values = []
+            for field in fields:
+                value = request.POST.get(field, '')
+                if value == '':
+                    values.append('')
+                else:
+                    values.append(value)
+            student_id = request.POST.get('studentID')
+            
+            # Get the studentInfo instance corresponding to the provided student ID
+            student = get_object_or_404(studentInfo, studID=student_id)
+            new_form.date = timezone.now()
+            new_form.contributedToDecision = values
+            new_form.studentID = student
+            new_form.dateRecieved = timezone.now()
+            new_form.save()
+            messages.success(request, 'Your request has been successfully added. An email will be sent if it is accepted.')
+            return redirect('Exit Interview')
+    else:
+         form = ExitInterviewForm()
+    return render(request, 'exit_interview.html',{'form': form})
+def exit_interview_admin_view(request):
+    exit_interview_request = exit_interview_db.objects.select_related('studentID').order_by('-dateRecieved')
+    context = {'exit_interview_request': exit_interview_request,}
+    return render(request, 'exit_interview_admin.html', context)
+def update_exit_interview_status(request):
+    if request.method == 'POST':
+        requestID = request.POST.get('exitinterviewId', '')
+        update_type = request.POST.get('type','')
+        if update_type == 'accept':
+            obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
+            obj.status = 'Accepted'
+            obj.save()
+    
+            # Optionally, you can return a JSON response indicating success
+            return JsonResponse({'message': 'Value updated successfully'})
+        elif update_type == 'decline':
+            obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
+            obj.status = 'Declined'
+            obj.save()
+    
+            # Optionally, you can return a JSON response indicating success
+            return JsonResponse({'message': 'Value updated successfully'})
+def delete_exit_interview_status(request):
+    if request.method == 'POST':
+        requestID = request.POST.get('exitinterviewId', '')
+        obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
+        obj.delete()
+        return JsonResponse({'message': 'Value updated successfully'})         
+
+def ojt_assessment(request):
+    if request.method == 'POST':
+        form = OjtAssessmentForm(request.POST)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            student_id = request.POST.get('student_id_val')
+            student = get_object_or_404(studentInfo, studID=student_id)
+            new_form.studentID = student
+            new_form.dateRecieved = timezone.now()
+            new_form.save()
+            messages.success(request, 'Your request has been successfully added. An email will be sent if it is accepted.')
+            return redirect('OJT Assessment')
+    else:
+        form = OjtAssessmentForm()
+    return render(request,'ojt_assessment.html',{'form': form})
+
+def ojt_assessment_admin_view(request):
+    ojt_assessment_request = OjtAssessment.objects.select_related('studentID').order_by('-dateRecieved')
+    context = {'ojt_assessment_request': ojt_assessment_request,}
+    return render(request, 'ojt_assessment_admin.html', context)

@@ -1,5 +1,13 @@
 $(document).ready(function(){
-    // Get CSRF token from cookies
+    $('input[name="currentlyEmployed"]').change(function(){
+        $('#explainationEmployed').removeClass('hidden')
+        let selectedValue = $('input[name="currentlyEmployed"]:checked').val();
+        if (selectedValue === "True") {
+            $('#employedYesNo').text('-Please provide the name and address of the company:');
+        } else if (selectedValue === "False") {
+            $('#employedYesNo').text('-Please provide the name and address of the company you want:');
+        }
+    });
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -17,12 +25,11 @@ $(document).ready(function(){
     }
     var csrftoken = getCookie('csrftoken');
 
-    // Intercept form submission
     $('#searchButton').on('click', function(event) {
         event.preventDefault(); // Prevent default form submission behavior
-        
+        console.log('hs')
         // Get the entered ID number
-        var idNumber = $('#studentIDBox').val();
+        let idNumber = $('#studentIDBox').val();
 
         // Send AJAX request to fetch student info
         $.ajax({
@@ -34,23 +41,21 @@ $(document).ready(function(){
             },
             success: function(response) {
                 $('#info_table').removeClass('hidden')
-                $('#requestForm').removeClass('hidden')
+                $('#questionForm').removeClass('hidden')
 
-                $('#student_id_val').val(response.student_id)
+                $('#studentID').val(response.student_id)
                 $('#info_table tr').empty();
                 
                 // Append new row with retrieved data
                 $('#info_table').append(
                     '<tr id="info_table_head">'+
                     '<th>NAME</th>'+
-                    '<th>PROGRAM/YEAR AND SECTION</th>'+
                     '<th>CONTACT NO.</th>'+
                     '</tr>'
                 );
                 $('#info_table').append(
                     '<tr>' +
                     '<td>' + response.name + '</td>' +
-                    '<td>' + `${response.program} ${response.year}` + '</td>' +
                     '<td>' + '0' + response.contact_number + '</td>' +
                     '</tr>'
                 );
@@ -61,7 +66,7 @@ $(document).ready(function(){
                 $('#info_table').empty()
                 $('#info_table').append(
                     '<tr>' +
-                    '<td colspan="4">Student ID not found.</td>' +
+                    '<td colspan="2">Student ID not found.</td>' +
                     '</tr>'
                 );
             }
