@@ -103,6 +103,7 @@ $(document).ready(function(){
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
         let decline = $(this).closest('tr').find('.decline');
+        let showformButton = $(this).closest('tr').find('.showformButton');
         // Perform further actions here, such as sending the ID to the server
         $.post({
             url: '/update_ojt_assessment/',
@@ -112,8 +113,9 @@ $(document).ready(function(){
             },
             headers: {'X-CSRFToken': csrftoken}, 
             success: function(response) {
+
                 statusSpan.replaceWith(' <span class="accepted">Accepted</span>')
-                $('.showformButton').removeClass('hidden')
+                showformButton.removeClass('hidden')
                 accept.remove()
                 decline.remove()
             },

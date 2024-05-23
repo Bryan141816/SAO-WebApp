@@ -1,5 +1,5 @@
 from django import forms
-from SAO_WebApp.models import counseling_schedule, IndividualProfileBasicInfo, FileUploadTest, exit_interview_db, OjtAssessment
+from .models import counseling_schedule, IndividualProfileBasicInfo, FileUploadTest, exit_interview_db, OjtAssessment
 from datetime import date
 
 class UploadFileForm(forms.Form):
@@ -70,6 +70,15 @@ class ExitInterviewForm(forms.ModelForm):
                 'placeholder': 'Enter your email address.'
             }),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['feedbackWithAcademic'].required = False
+        self.fields['feedbackWithSocial'].required = False
+        self.fields['feedbackWithServices'].required = False
+        self.fields['knowAboutYourTime'].required = False
+        self.fields['whatCondition'].required = False
+        self.fields['planTOReturn'].required = False
+        self.fields['intendedMajor'].required = False
 
 
 

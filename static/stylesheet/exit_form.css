@@ -62,13 +62,14 @@ hr {
 .page-container{
     margin-bottom: 100px;
     max-height: 260.2mm;
+    padding: 0;
 }
 
 .content {
     display: flex;
     flex-direction: column;
     margin-bottom: 40px;
-    padding: 0 30px;
+    padding: 0 20px;
 }
 .content p{
     font-size: 7pt;
@@ -88,7 +89,9 @@ hr {
     height: 50px;
 }
 
-
+.additionalpadding{
+    margin-top: 100px;
+}
 .signature {
     display: flex;
     flex-direction: column;

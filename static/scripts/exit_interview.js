@@ -91,9 +91,8 @@ $(document).ready(function(){
                     $('#id_scheduled_time option').prop('disabled', false).text(function () {
                         return $(this).text().replace(' (occupied)', ''); // Remove existing "(occupied)" text
                     }); // Enable all options initially
-                    console.log(response)
                     $.each(disabledTimes, function(index, value) {
-                        if (value.status !== 'declined') {
+                        if (value.status != "Declined") {
                             $('#id_scheduled_time option[value="' + value.scheduled_time + '"]').prop('disabled', true).text(function (index, text) {
                                 return text + ' (occupied)'; // Append "(occupied)" to disabled options
                             });

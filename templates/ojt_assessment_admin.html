@@ -106,15 +106,13 @@
                         
                         <td>
                             {% if ojt_request.status == 'Accepted' %}
-                                
+                                <span class="accepted">{{ ojt_request.status }}</span>
                             {% elif ojt_request.status == 'Declined' %}
                                 <span class="declined">{{ ojt_request.status }}</span>
                             {% elif ojt_request.status == 'Pending' %}
                                 <span class="pending">{{ ojt_request.status }}</span>
                             {% elif ojt_request.status == 'Expired' %}
                                 <span class="expired">{{ ojt_request.status }}</span>
-                            {% else %}
-                                {{ ojt_request.status }}
                             {% endif %}
                         </td>                        
                         <td>

@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from SAO_WebApp.forms import CounselingSchedulerForm, IndividualProfileForm, FileUpload, UploadFileForm, ExitInterviewForm, OjtAssessmentForm
+from .forms import CounselingSchedulerForm, IndividualProfileForm, FileUpload, UploadFileForm, ExitInterviewForm, OjtAssessmentForm
 from .models import TestArray, studentInfo, counseling_schedule, exit_interview_db, OjtAssessment
 from django.utils import timezone
 from django.contrib import messages
@@ -275,7 +275,7 @@ def get_exit_interview_request(request):
                 'firstConsider': student.firstConsider,
                 'whatCondition': student.whatCondition,
                 'recommend': student.recommend,
-                'howSatisfied': student.howSatisfied,
+                'howSatisfied': (student.howSatisfied).title(),
                 'planTOReturn': student.planTOReturn,
                 'accademicExperienceSatisfied': student.accademicExperienceSatisfied,
                 'knowAboutYourTime': student.knowAboutYourTime,
@@ -332,6 +332,9 @@ def exit_interview(request):
                 'needed_more_academic_support',
                 'financial',
                 'medical_injury',
+                'medical_pyscho',
+                'family-obligations',
+                'major_event'
             ]
             values = []
             for field in fields:
