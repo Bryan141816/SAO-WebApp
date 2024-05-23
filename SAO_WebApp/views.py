@@ -248,7 +248,43 @@ def get_ojt_assessment_data(request):
             return JsonResponse(response)
         except studentInfo.DoesNotExist:
             return JsonResponse({'error': 'Student not found'}, status=404)
+def get_exit_interview_request(request):
+    if request.method == 'POST':
+        recordID = request.POST.get('requestID','')
+        try:
+            student = exit_interview_db.objects.get(exitinterviewId=recordID)
+            if student.studentID.middlename == 'NONE':
+                middleInit = ''  # Set to empty string if text is 'NONE'
+            else:
+                middleInit = student.studentID.middlename[0]
 
+            response = {
+				'name': f"{student.studentID.firstname.title()} {middleInit} {student.studentID.lastname.title()}",
+                'date': (student.date).strftime("%B %d, %Y"),
+                'dateenrolled': (student.dateEnrolled).strftime("%B %d, %Y"),
+                'contact': student.studentID.contact,
+                'reasonforleaving': student.reasonForLeaving,
+                'satisfiedWithAcadamic': student.satisfiedWithAcadamic,
+                'feedbackWithAcademic': student.feedbackWithAcademic,
+                'satisfiedWithSocial': student.satisfiedWithSocial,
+                'feedbackWithSocial':student.feedbackWithSocial,
+                'satisfiedWithServices':student.satisfiedWithServices,
+                'feedbackWithServices':student.feedbackWithServices,
+                'contributedToDecision': student.contributedToDecision,
+                'intendedMajor': student.intendedMajor,
+                'firstConsider': student.firstConsider,
+                'whatCondition': student.whatCondition,
+                'recommend': student.recommend,
+                'howSatisfied': student.howSatisfied,
+                'planTOReturn': student.planTOReturn,
+                'accademicExperienceSatisfied': student.accademicExperienceSatisfied,
+                'knowAboutYourTime': student.knowAboutYourTime,
+                'currentlyEmployed': student.currentlyEmployed,
+                'explainationEmployed': student.explainationEmployed
+        	}
+            return JsonResponse(response)
+        except studentInfo.DoesNotExist:
+            return JsonResponse({'error': 'Student not found'}, status=404)
 def check_date_time_validity(request):
     if request.method == 'POST':
         selected_date = request.POST.get('selected_date')

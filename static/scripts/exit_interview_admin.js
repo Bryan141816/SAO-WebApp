@@ -130,27 +130,71 @@ $(document).ready(function(){
     });
     $(document).on('click', '.showformButton', function() {
         console.log('haha');
-        let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
+        let requestID = $(this).closest('tr').find('.exitinterviewId').val();
         $('.showform_container').addClass('active');
-        /*$.post({
-            url: '/get_ojt_assessment_data/',
-            data: { 'OjtRequestID': OjtRequestID},
+        $.post({
+            url: '/get_exit_interview_request/',
+            data: { 'requestID': requestID},
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             headers: {'X-CSRFToken': csrftoken}, 
             success: function(response) {
                 console.log(response)
-                $('#student-name').text(response.name)
-                $('#school-year').text(response.schoolyear)
-                $('#student-course').text(`${response.program}.`)
-                $('#issue-date').text(response.date_accepted)
+                $('#name').text(response.name)
+                $('#date').text(response.date)
+                $('#date-enrolled').text(response.dateenrolled)
+                $('#contact').text(response.contact)
+                $('#question1').text(response.reasonforleaving)
+                if(response.satisfiedWithAcadamic){
+                    $('#question2_yes').text('✔')
+                }
+                else{
+                    $('#question2_no').text('✔')
+                }
+                $('#question2').text(response.feedbackWithAcademic)
+                if(response.satisfiedWithSocial){
+                    $('#question3_yes').text('✔')
+                }
+                else{
+                    $('#question3_no').text('✔')
+                }
+                $('#question3').text(response.feedbackWithSocial)
+                if(response.satisfiedWithServices){
+                    $('#question4_yes').text('✔')
+                }
+                else{
+                    $('#question4_no').text('✔')
+                }
+                $('#question4').text(response.feedbackWithServices)
+
+                
+
+
                 $('.showform_container').addClass('active');
             },
             error: function(xhr, status, error) {
                 // Handle error if needed
             }
-        });*/
+        });
+    });
+    
+    $('.saveButton').click(function(){
+        console.log('ha')
+        const elements = document.getElementById("paper");
+        const student_name = $('#student-name').text()
+        const options = {
+            margin: [0, 0, 0, 0],
+            filename: `${student_name}_certificate.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [216, 279], orientation: 'portrait' }
+        };
+
+        html2pdf()
+            .from(elements)
+            .set(options)
+            .save();
     });
     $('.closeform').click(function(){
         $('.showform_container').removeClass('active');

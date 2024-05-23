@@ -1,72 +1,16 @@
 
-.container2 {
-    width: 80%;
+.certificate {
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
+    max-width: 216mm;
+    padding:0 20mm;
+    background-color: white;
 }
 
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.container2 h2,
-.container2 h3 {
-    margin-bottom: 10px;
-}
-
-.container2 label {
-    display: block;
-    margin-bottom: 5px;
-    color: #000000;
-    font-weight: bold;
-}
-
-.container2 input[type="text"],
-.container2 input[type="date"],
-.container2 textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    border: none;
-    border-radius: 10px;
-}
-
-.checkbox-group,
-.radio-group {
-    margin-bottom: 10px;
-}
-
-.checkbox-group label,
-.radio-group label {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.checkbox-group input,
-.radio-group input {
-    margin-right: 5px;
-}
-
-.container2 button {
-    padding: 10px 20px;
-    border-radius: 10px;
-    background-color: #FF8000;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.certificate-container2 {
-    position: absolute;
-    justify-content: center;
-    width: 100%;
-    max-width: 800px;
-    box-sizing: border-box;
-    text-align: center;
-    margin: 0 auto;
-    padding: 20px;
-    border: none;
+.Republique,.cebu {
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .logo_content {
@@ -81,34 +25,94 @@
     height: auto;
 }
 
-.Republique {
+.header {
     text-align: center;
-    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-.container2 p,
-.container2 h4 {
+.header p {
+    font-size: 12px;
+    /*margin: 5px 0;*/
+}   
+
+hr {
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.title p{
+    font-size: 10pt;
+}
+.title_table td {
+    padding: 0 40px; /* Add padding to the cells for spacing inside */
+}
+.title_table td:first-child {
+    font-size: 9pt;
+    text-align: left; /* Align text to the left for the first column */
+}
+
+.title_table td:last-child {
+    font-size: 9pt;
+    text-align: right; /* Align text to the right for the second column */
+}
+.page-container{
+    margin-bottom: 100px;
+    max-height: 260.2mm;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    padding: 0 30px;
+}
+.content p{
+    font-size: 7pt;
+
+}
+.long-text-p{
+    font-size: 9pt !important;
+    margin-bottom: 10px;
+}
+.content strong{
+    font-size: 9pt;
+}
+.answer-long-text{
+    height: 100px;
+}
+.answer-mid-text{
+    height: 50px;
+}
+
+
+.signature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.signature p {
+    margin: 5px 0;
+}
+
+.names {
+    text-decoration: underline;
+    text-align: center;
+
+}
+
+.guidance p {
     text-align: center;
 }
-
-.cebu {
-    font-weight: bold;
+.check-box-container{
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
 }
-
-.container2 table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-}
-
-
-.container2 th,
-.container2 td {
-    width: 50%;
-    padding: 8px;
-    text-align: left;
-}
-
-.container2 th {
-    background-color: #f2f2f2;
+.check-box-container label{
+    font-size: 9pt;
 }
