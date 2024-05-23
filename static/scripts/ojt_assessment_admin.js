@@ -1,13 +1,5 @@
 $(document).ready(function(){
-    $('input[name="currentlyEmployed"]').change(function(){
-        $('#explainationEmployed').removeClass('hidden')
-        let selectedValue = $('input[name="currentlyEmployed"]:checked').val();
-        if (selectedValue === "True") {
-            $('#employedYesNo').text('-Please provide the name and address of the company:');
-        } else if (selectedValue === "False") {
-            $('#employedYesNo').text('-Please provide the name and address of the company you want:');
-        }
-    });
+    // Get CSRF token from cookies
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -34,7 +26,7 @@ $(document).ready(function(){
 
         // Send AJAX request to fetch student info
         $.ajax({
-            url: '/search_exit_interview_request/',
+            url: '/search_ojt_assessment_request/',
             method: 'POST',
             data: {'id_number': idNumber},
             beforeSend: function(xhr, settings) {
@@ -49,6 +41,7 @@ $(document).ready(function(){
                     '<th>DATE RECEIVED</th>' +
                     '<th>STUDENT ID</th>' +
                     '<th>NAME</th>' +
+                    '<th>School Year</th>' +
                     '<th colspan="3">STATUS</th>' +
                     '</tr>'
                 );
@@ -85,6 +78,7 @@ $(document).ready(function(){
                         '<td>' + student.date_received + '</td>' +
                         '<td>' + student.student_id + '</td>' +
                         '<td>' + student.name + '</td>' +
+                        '<td>' + student.schoolyear + '</td>' +
                         '<td>' + status_val + '</td>' +
                         '<td>' + '<div class="horizontal">' + button_element + '</div>' + '</td>' +
                         '<td>' + show_form + '</td>' +
@@ -105,21 +99,21 @@ $(document).ready(function(){
         });
     });
     $('.accept').click(function() {
-        let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
+        let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
         let decline = $(this).closest('tr').find('.decline');
         // Perform further actions here, such as sending the ID to the server
         $.post({
-            url: '/update_exit_interview_status/',
-            data: { 'exitinterviewId': exitinterviewId, 'type': 'accept' },
+            url: '/update_ojt_assessment/',
+            data: { 'OjtRequestID': OjtRequestID, 'type': 'accept' },
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             headers: {'X-CSRFToken': csrftoken}, 
             success: function(response) {
-                $('.showformButton').removeClass('hidden')
                 statusSpan.replaceWith(' <span class="accepted">Accepted</span>')
+                $('.showformButton').removeClass('hidden')
                 accept.remove()
                 decline.remove()
             },
@@ -132,7 +126,7 @@ $(document).ready(function(){
         console.log('haha');
         let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         $('.showform_container').addClass('active');
-        /*$.post({
+        $.post({
             url: '/get_ojt_assessment_data/',
             data: { 'OjtRequestID': OjtRequestID},
             beforeSend: function(xhr, settings) {
@@ -150,21 +144,22 @@ $(document).ready(function(){
             error: function(xhr, status, error) {
                 // Handle error if needed
             }
-        });*/
+        });
     });
     $('.closeform').click(function(){
         $('.showform_container').removeClass('active');
     });
+    
     // Event listener for decline button
     $('.decline').click(function() {
-        let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
+        let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
         let decline = $(this).closest('tr').find('.decline');
         // Perform further actions here, such as sending the ID to the server
         $.post({
-            url: '/update_exit_interview_status/',
-            data: { 'exitinterviewId': exitinterviewId, 'type': 'decline' },
+            url: '/update_ojt_assessment/',
+            data: { 'OjtRequestID': OjtRequestID, 'type': 'decline' },
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
@@ -180,13 +175,29 @@ $(document).ready(function(){
         });
     });
 
+    $('.saveButton').click(function(){
+        const elements = document.getElementById("paper");
+        const student_name = $('#student-name').text()
+        const options = {
+            margin: [0, 0, 0, 0],
+            filename: `${student_name}_certificate.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [216, 279], orientation: 'portrait' }
+        };
+
+        html2pdf()
+            .from(elements)
+            .set(options)
+            .save();
+    });
     // Event listener for delete button
     $('.delete').click(function() {
-        let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
+        let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let parentRow = $(this).closest('tr')
         $.post({
-            url: '/delete_exit_interview_status/',
-            data: { 'exitinterviewId': exitinterviewId },
+            url: '/delete_ojt_assessment/',
+            data: { 'exitinterviewId': OjtRequestID },
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },

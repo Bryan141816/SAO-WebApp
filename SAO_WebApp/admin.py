@@ -18,8 +18,8 @@ class counselingSceduleAdmin(admin.ModelAdmin):
     list_editable = ('dateRecieved','reason','scheduled_date','scheduled_time','email','status')
 
 class OjtAssessmentAdmin(admin.ModelAdmin):
-    list_display = ['OjtRequestID','studentID','dateRecieved','schoolYear','status']
-    list_editable = ['schoolYear','status']
+    list_display = ['OjtRequestID','studentID','dateRecieved','schoolYear','status','dateAccepted']
+    list_editable = ['schoolYear','status','dateAccepted']
 
 class exitInterviewAdmine(admin.ModelAdmin):
     list_display = (
@@ -46,7 +46,10 @@ class exitInterviewAdmine(admin.ModelAdmin):
         'knowAboutYourTime',
         'currentlyEmployed',
         'explainationEmployed',
-        'status'
+        'status',
+        'scheduled_date',
+        'scheduled_time',
+        'emailadd'
     )
     list_editable = (
         'date',
@@ -68,7 +71,10 @@ class exitInterviewAdmine(admin.ModelAdmin):
         'knowAboutYourTime',
         'currentlyEmployed',
         'explainationEmployed',
-        'status'
+        'status',
+        'scheduled_date',
+        'scheduled_time',
+        'emailadd'
     )
 
 

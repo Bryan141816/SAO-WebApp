@@ -72,4 +72,83 @@ $(document).ready(function(){
             }
         });
     });
+    $('#id_scheduled_date').on('change', function() {
+        if ($(this).val()) {
+            $('#id_scheduled_time').prop('disabled', false);
+            let selectedDate = $(this).val();
+            let csrftoken = getCookie('csrftoken');
+            // Make a POST request
+            $.post({
+                url: '/check_date_time_validity_for_exit/',
+                data: { selected_date: selectedDate },
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                headers: {'X-CSRFToken': csrftoken}, 
+                success: function(response) {
+                    let disabledTimes = response.counseling_schedules;
+                    $('#id_scheduled_time option').prop('disabled', false); // Enable all options initially
+                    $('#id_scheduled_time option').prop('disabled', false).text(function () {
+                        return $(this).text().replace(' (occupied)', ''); // Remove existing "(occupied)" text
+                    }); // Enable all options initially
+                    console.log(response)
+                    $.each(disabledTimes, function(index, value) {
+                        if (value.status !== 'declined') {
+                            $('#id_scheduled_time option[value="' + value.scheduled_time + '"]').prop('disabled', true).text(function (index, text) {
+                                return text + ' (occupied)'; // Append "(occupied)" to disabled options
+                            });
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    // Handle error if needed
+                }
+            });
+        } else {
+            $('#id_scheduled_time').prop('disabled', true);
+            $('#id_scheduled_time').val(''); 
+        }
+    });
+    function validateInputs() {
+        let values = [];
+        let hasDuplicates = false;
+
+        // Select only the number inputs within the specific table
+        $('table.table input[type="number"]').each(function() {
+            let value = $(this).val();
+            let name = $(this).attr('name');
+
+            // Clear previous errors
+            $(this).removeClass('error');
+            $(this).next('.error-message').remove();
+
+            if (value === "") {
+                value = "empty";
+            } else if (parseInt(value) < 1) {
+                // Check if value is below 1
+                $(this).addClass('error');
+                $(this).after('<span class="error-message" style="color:red;">Value must be 1 or higher.</span>');
+            }
+
+            if (values.includes(value)) {
+                hasDuplicates = true;
+            }
+            values.push(value);
+        });
+
+        if (hasDuplicates) {
+            $('table.table input[type="number"]').each(function() {
+                let value = $(this).val();
+                if (value !== "" && values.filter(v => v === value).length > 1) {
+                    $(this).addClass('error');
+                    $(this).after('<span class="error-message" style="color:red;">Duplicate value found.</span>');
+                }
+            });
+        }
+    }
+
+    // Attach the event handler to the number inputs within the specific table
+    $('table.table input[type="number"]').on('change', function() {
+        validateInputs();
+    });
 });

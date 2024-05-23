@@ -32,6 +32,15 @@
             </table>
             <form method="post" action="" id="questionForm" class="hidden">
                 {% csrf_token %}
+                <div id="requestScheduleContainer">
+                    <div id="datetimepicker">
+                        <label>Schedule Date and Time</label>
+                        {{ form.scheduled_date }}
+                        {{ form.scheduled_time }}
+                    </div>
+                    <label>Email Address:</label>
+                    {{form.emailadd}}
+                </div>
                 <input type="hidden" name="studentID" id="studentID">
                 <div class="questions">
                     <h2>Please Answer Each Question</h2>

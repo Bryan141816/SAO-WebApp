@@ -4,7 +4,7 @@
 
 {% extends "main.html" %}
 {% load static %}
-{% block title %}Counseling App With Scheduler{% endblock %}
+{% block title %}OJT Assessments/Psychological Issuance{% endblock %}
 {% block headcontent %}
 <link rel="stylesheet" type="text/css" href="{% static 'stylesheet/ojt_assessment.css'%}">
 {% endblock %}
@@ -40,6 +40,8 @@
                 <input type="hidden" id="student_id_val" name="student_id_val">
                 <label>School Year:</label>
                 {{ form.schoolYear }}
+                <label>Email Address:</label>
+                {{form.emailadd}}
                 <button type="submit" class="OrangeButton">Request</button>
             </form>
         </div>

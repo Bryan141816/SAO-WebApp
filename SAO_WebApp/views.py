@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.template.defaulttags import register
+from django.core.mail import send_mail
+from django.http import HttpResponse
 
 class testing:
   name = "Testing rani"
@@ -63,7 +65,7 @@ def counseling_app(request):
                 scheduled_date__gte=current_datetime.date()
             ).first()
             
-            if ongoing_schedule and not ongoing_schedule.status == 'declined':
+            if ongoing_schedule and not ongoing_schedule.status == 'Declined' and not ongoing_schedule.status == 'Expired':
                 time = {
 					'8-9': '8:00 AM - 9:00 AM',
 					'9-10': '9:00 AM - 10:00 AM',
@@ -193,6 +195,59 @@ def search_student_info(request):
             return JsonResponse(response)
         except studentInfo.DoesNotExist:
             return JsonResponse({'error': 'Student not found'}, status=404)
+def search_ojt_assessment_request(request):
+    if request.method == 'POST':
+        id_number = request.POST.get('id_number', '')
+        students = OjtAssessment.objects.filter(studentID__studID=id_number)
+        if students.exists():
+            response = []
+            for student in students:
+                response.append({
+                    'date_received': student.dateRecieved,
+                    'student_id': student.studentID.studID,
+                    'name': f"{student.studentID.lastname}, {student.studentID.firstname}",
+                    'schoolyear': student.schoolYear,
+                    'status': student.status
+                })
+            return JsonResponse(response, safe=False)  # safe=False to allow serialization of non-dict objects
+        else:
+            return JsonResponse({'error': 'Student not found'}, status=404)    
+def search_exit_interview_request(request):
+    if request.method == 'POST':
+        id_number = request.POST.get('id_number', '')
+        students = exit_interview_db.objects.filter(studentID__studID=id_number)
+        if students.exists():
+            response = []
+            for student in students:
+                response.append({
+                    'date_received': student.dateRecieved,
+                    'student_id': student.studentID.studID,
+                    'name': f"{student.studentID.lastname}, {student.studentID.firstname}",
+                    'status': student.status
+                })
+            return JsonResponse(response, safe=False)  # safe=False to allow serialization of non-dict objects
+        else:
+            return JsonResponse({'error': 'Student not found'}, status=404)    
+def get_ojt_assessment_data(request):
+    if request.method == 'POST':
+        recordID = request.POST.get('OjtRequestID','')
+        try:
+            student = OjtAssessment.objects.get(OjtRequestID=recordID)
+            if student.studentID.middlename == 'NONE':
+                middleInit = ''  # Set to empty string if text is 'NONE'
+            else:
+                middleInit = student.studentID.middlename[0]
+            dateAccepted =student.dateAccepted
+            formatted_dateAccepeted = dateAccepted.strftime("%B %d, %Y")
+            response = {
+				'name': f"{student.studentID.firstname.title()} {middleInit} {student.studentID.lastname.title()}",
+                'schoolyear': student.schoolYear,
+				'program':student.studentID.degree,
+                'date_accepted':formatted_dateAccepeted,    
+        	}
+            return JsonResponse(response)
+        except studentInfo.DoesNotExist:
+            return JsonResponse({'error': 'Student not found'}, status=404)
 
 def check_date_time_validity(request):
     if request.method == 'POST':
@@ -202,6 +257,20 @@ def check_date_time_validity(request):
             selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
             # Query the counseling_schedule model for entries with the same scheduled_date
             counseling_schedules = counseling_schedule.objects.filter(scheduled_date=selected_date)
+            # You can now do something with the counseling_schedules queryset, like serialize it to JSON
+            serialized_data = [{'scheduled_time': schedule.scheduled_time, 'status': schedule.status} for schedule in counseling_schedules]
+            return JsonResponse({'counseling_schedules': serialized_data})
+        except ValueError:
+            # Handle invalid date format
+            return JsonResponse({'error': 'Invalid date format'}, status=400)
+def check_date_time_validity_for_exit(request):
+    if request.method == 'POST':
+        selected_date = request.POST.get('selected_date')
+        try:
+            # Convert the selected date string to a Python datetime object
+            selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+            # Query the counseling_schedule model for entries with the same scheduled_date
+            counseling_schedules = exit_interview_db.objects.filter(scheduled_date=selected_date)
             # You can now do something with the counseling_schedules queryset, like serialize it to JSON
             serialized_data = [{'scheduled_time': schedule.scheduled_time, 'status': schedule.status} for schedule in counseling_schedules]
             return JsonResponse({'counseling_schedules': serialized_data})
@@ -239,6 +308,32 @@ def exit_interview(request):
             
             # Get the studentInfo instance corresponding to the provided student ID
             student = get_object_or_404(studentInfo, studID=student_id)
+
+            ongoing_request = exit_interview_db.objects.filter(
+                studentID=student,
+                status = 'Pending' 
+            ).first()
+            
+            if ongoing_request:
+                messages.error(request, f'You still have an pending request.')
+                return redirect('Exit Interview')
+            
+            current_date = timezone.localtime(timezone.now())
+            date_number = current_date.strftime("%m%d%y")  # Format date as MMDDYY
+
+            # Sum the digits of the student ID
+            digit_sum = sum(int(digit) for digit in str(student_id))
+
+            # Combine date number and digit sum into a preliminary final number
+            preliminary_final_number = f"{date_number}{digit_sum}"
+
+            # Calculate the number of zeros needed to make the length 10 digits
+            total_length = 10
+            number_of_zeros_needed = total_length - len(preliminary_final_number)
+
+            # Insert zeros between date number and digit sum
+            final_number = f"{date_number}{'0' * number_of_zeros_needed}{digit_sum}"
+            
             new_form.date = timezone.now()
             new_form.contributedToDecision = values
             new_form.studentID = student
@@ -260,6 +355,16 @@ def update_exit_interview_status(request):
         if update_type == 'accept':
             obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
             obj.status = 'Accepted'
+            message = f"Hello {obj.studentID.firstname.title()} {obj.studentID.lastname.title()} your Exit Interview request has been approved."
+            email = obj.emailadd
+            obj.save()
+            send_mail(
+                'Exit Interview Request',
+                message,
+                'notifytest391@gmail.com',  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
             obj.save()
     
             # Optionally, you can return a JSON response indicating success
@@ -267,6 +372,16 @@ def update_exit_interview_status(request):
         elif update_type == 'decline':
             obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
             obj.status = 'Declined'
+            message = f"Hello {obj.studentID.firstname.title()} {obj.studentID.lastname.title()} your Exit Interview request has been declined."
+            email = obj.emailadd
+            obj.save()
+            send_mail(
+                'Exit Interview Request',
+                message,
+                'notifytest391@gmail.com',  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
             obj.save()
     
             # Optionally, you can return a JSON response indicating success
@@ -276,8 +391,49 @@ def delete_exit_interview_status(request):
         requestID = request.POST.get('exitinterviewId', '')
         obj = get_object_or_404(exit_interview_db, exitinterviewId=requestID)
         obj.delete()
-        return JsonResponse({'message': 'Value updated successfully'})         
-
+        return JsonResponse({'message': 'Value updated successfully'})  
+def update_ojt_assessment(request):
+    if request.method == 'POST':
+        requestID = request.POST.get('OjtRequestID', '')
+        update_type = request.POST.get('type','')
+        if update_type == 'accept':
+            obj = get_object_or_404(OjtAssessment, OjtRequestID=requestID)
+            obj.status = 'Accepted'
+            obj.dateAccepted = timezone.now()
+            message = f"Hello {obj.studentID.firstname.title()} {obj.studentID.lastname.title()} your OJT Assessments/Psychological Issuance request has been approved."
+            email = obj.emailadd
+            obj.save()
+            send_mail(
+                'OJT Assessments/Psychological Issuance Request',
+                message,
+                'notifytest391@gmail.com',  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
+    
+            # Optionally, you can return a JSON response indicating success
+            return JsonResponse({'message': 'Value updated successfully'})
+        elif update_type == 'decline':
+            obj = get_object_or_404(OjtAssessment, OjtRequestID=requestID)
+            obj.status = 'Declined'
+            obj.save()
+            message = f"Hello {obj.studentID.firstname.title()} {obj.studentID.lastname.title()} your OJT Assessments/Psychological Issuance request has been declined."
+            email = obj.emailadd
+            send_mail(
+                'OJT Assessments/Psychological Issuance Request',
+                message,
+                'notifytest391@gmail.com',  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
+            # Optionally, you can return a JSON response indicating success
+            return JsonResponse({'message': 'Value updated successfully'})       
+def delete_ojt_assessment(request):
+    if request.method == 'POST':
+        requestID = request.POST.get('exitinterviewId', '')
+        obj = get_object_or_404(OjtAssessment, OjtRequestID=requestID)
+        obj.delete()
+        return JsonResponse({'message': 'Value updated successfully'})  
 def ojt_assessment(request):
     if request.method == 'POST':
         form = OjtAssessmentForm(request.POST)
@@ -285,6 +441,15 @@ def ojt_assessment(request):
             new_form = form.save(commit=False)
             student_id = request.POST.get('student_id_val')
             student = get_object_or_404(studentInfo, studID=student_id)
+            ongoing_request = OjtAssessment.objects.filter(
+                studentID=student,
+                status = 'Pending' 
+            ).first()
+            
+            if ongoing_request:
+                messages.error(request, f'You still have an pending request.')
+                return redirect('OJT Assessment')
+
             new_form.studentID = student
             new_form.dateRecieved = timezone.now()
             new_form.save()

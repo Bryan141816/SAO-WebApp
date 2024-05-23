@@ -28,7 +28,12 @@ class CounselingSchedulerForm(forms.ModelForm):
 class OjtAssessmentForm(forms.ModelForm):
     class Meta:
         model = OjtAssessment
-        fields = ['schoolYear']
+        fields = ['schoolYear', 'emailadd']
+        widgets ={
+            'emailadd': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email address.'
+            }),
+        }
 
 class ExitInterviewForm(forms.ModelForm):
     yes_no =[
@@ -55,6 +60,15 @@ class ExitInterviewForm(forms.ModelForm):
             'planTOReturn': forms.Textarea(),
             'knowAboutYourTime': forms.Textarea(),
             'explainationEmployed': forms.Textarea(),
+            'scheduled_date': forms.DateInput(attrs={
+                'type': 'date',
+                'min': date.today().isoformat(),
+                'placeholder': 'Select a date'
+            }),
+            'scheduled_time': forms.Select(attrs={'disabled': 'disabled'}),
+            'emailadd': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email address.'
+            }),
         }
 
 

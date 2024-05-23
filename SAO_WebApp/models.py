@@ -18,6 +18,20 @@ class exit_interview_db(models.Model):
     exitinterviewId = models.AutoField(primary_key=True)
     studentID = models.ForeignKey(studentInfo,on_delete=models.CASCADE)
     dateRecieved = models.DateField()
+
+    scheduled_date = models.DateField()
+    time = [
+        ('8-9', '8:00 AM - 9:00 AM'),
+        ('9-10', '9:00 AM - 10:00 AM'),
+        ('10-11', '10:00 AM-11:00 AM'),
+        ('11-12', '11:00 AM -12:00 PM'),
+        ('1-2','1:00 PM - 2:00 PM'),
+        ('2-3','2:00 PM - 3:00 PM'),
+        ('3-4','3:00 PM - 4:00 PM'),
+        ('4-5','4:00 PM - 5:00 PM'),
+    ]
+    scheduled_time = models.CharField(max_length=15, choices=time)
+    emailadd = models.EmailField()
     date = models.DateField()
     dateEnrolled = models.DateField()
     reasonForLeaving = models.CharField(max_length=255)
@@ -90,6 +104,8 @@ class OjtAssessment(models.Model):
         ('Expired' , 'Expired')
     ]
     status = models.CharField(max_length=10, choices=approval_status, default='Pending')
+    dateAccepted = models.DateField(default=timezone.now())
+    emailadd = models.EmailField()
 
 class counseling_schedule(models.Model):
     counselingID = models.AutoField(primary_key=True)
