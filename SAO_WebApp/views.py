@@ -168,6 +168,7 @@ def exit_interview(request):
                 'academically_too_challenging',
                 'not_academically_challenging_enough',
                 'does_not_offer_my_academic_major',
+                'what_is_your_intended_major',
                 'size_of_the_school',
                 'location_of_the_school',
                 'negative_social_campus_climate',
@@ -320,7 +321,8 @@ def search_exit_interview_request(request):
             response = []
             for student in students:
                 response.append({
-                    'date_received': student.dateRecieved,
+                    'exit_interview_id': student.exitinterviewId,
+                    'date_received': student.dateRecieved.strftime("%B %d, %Y"),
                     'student_id': student.studentID.studID,
                     'name': f"{student.studentID.lastname}, {student.studentID.firstname}",
                     'status': student.status
@@ -337,7 +339,8 @@ def search_ojt_assessment_request(request):
             response = []
             for student in students:
                 response.append({
-                    'date_received': student.dateRecieved,
+                    'ojt_assessment_id': student.OjtRequestID,
+                    'date_received': student.dateRecieved.strftime("%B %d, %Y"),
                     'student_id': student.studentID.studID,
                     'name': f"{student.studentID.lastname}, {student.studentID.firstname}",
                     'schoolyear': student.schoolYear,

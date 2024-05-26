@@ -120,7 +120,28 @@ $(document).ready(function(){
             // Clear previous errors
             $(this).removeClass('error');
             $(this).next('.error-message').remove();
-
+            if($(this).attr('name')==='what_is_your_intended_major'){
+                let intendedMajor = $("input[name='what_is_your_intended_major']").val()
+                if(intendedMajor ==""){
+                    $('#id_intendedMajor').addClass('hidden')
+                    $('#id_intendedMajor').removeAttr('required', 'required');
+                }
+                else{
+                    $('#id_intendedMajor').removeClass('hidden')
+                    $('#id_intendedMajor').attr('required', 'required');
+                }
+            }
+            else if($(this).attr('name')==='major_event'){
+                let major_event = $("input[name='major_event']").val()
+                if(major_event==""){
+                    $('#id_majorEvent').addClass('hidden')
+                    $('#id_majorEvent').removeAttr('required', 'required');
+                }
+                else{
+                    $('#id_majorEvent').removeClass('hidden')
+                    $('#id_majorEvent').attr('required', 'required');
+                }
+            }
             if (value === "") {
                 value = "empty";
             } else if (parseInt(value) < 1) {
@@ -149,5 +170,15 @@ $(document).ready(function(){
     // Attach the event handler to the number inputs within the specific table
     $('table.table input[type="number"]').on('change', function() {
         validateInputs();
+    });
+    $('#what_is_your_intended_major').on('change', function(){
+        let what_is_your_intended_major = $('#what_is_your_intended_major').val()
+        if(what_is_your_intended_major != ''){
+            $('id_intendedMajor').removeClass('hidden');
+        }
+        else{
+            $('id_intendedMajor').addClass('hidden');
+            
+        }
     });
 });

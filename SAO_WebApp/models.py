@@ -43,6 +43,7 @@ class exit_interview_db(models.Model):
     feedbackWithServices = models.CharField(max_length=255)
     contributedToDecision = models.JSONField()
     intendedMajor = models.CharField(max_length=255)
+    majorEvent = models.CharField(max_length=255)
     firstConsider = models.CharField(max_length=255)
     whatCondition = models.CharField(max_length=255)
 

@@ -90,6 +90,12 @@
                                 <td><input type="number" name="does_not_offer_my_academic_major"></td>
                             </tr>
                             <tr>
+                                <td class="smallarea">What is your intended major?
+                                    {{form.intendedMajor}}
+                                </td>
+                                <td><input type="number" name="what_is_your_intended_major" id="what_is_your_intended_major"></td>
+                            </tr>
+                            <tr>
                                 <td class="smallarea">Size of the School</td>
                                 <td><input type="number" name="size_of_the_school"></td>
                             </tr>
@@ -134,14 +140,12 @@
                                 <td><input type="number" name="family-obligations"></td>
                             </tr> 
                             <tr>
-                                <td class="smallarea">Major life event(example: marraige, birth of a child, divorce, etc.).</td>
+                                <td class="smallarea">Major life event(example: marraige, birth of a child, divorce, etc.).
+                                    {{form.majorEvent}}
+                                </td>
                                 <td><input type="number" name="major_event"></td>
                             </tr> 
                         </table>
-                    </div>
-                    <div class="twocolumn">
-                        <label >What is your intended major?</label>
-                        {{form.intendedMajor}}
                     </div>
                     <label>Please continue to tell us in your own words about your experience at CTU-Argao Campus.</label>
                     <div class="twocolumn">

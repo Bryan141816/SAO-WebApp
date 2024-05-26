@@ -75,6 +75,7 @@ $(document).ready(function(){
             
                     $('#info_table').append(
                         '<tr>' +
+                        `<input type="hidden" name="OjtRequestID" class="OjtRequestID" value="${student.ojt_assessment_id}">`+
                         '<td>' + student.date_received + '</td>' +
                         '<td>' + student.student_id + '</td>' +
                         '<td>' + student.name + '</td>' +
@@ -98,7 +99,7 @@ $(document).ready(function(){
             }
         });
     });
-    $('.accept').click(function() {
+    $(document).on('click','.accept',function() {
         let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
@@ -125,7 +126,6 @@ $(document).ready(function(){
         });
     });
     $(document).on('click', '.showformButton', function() {
-        console.log('haha');
         let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         $('.showform_container').addClass('active');
         $.post({
@@ -136,7 +136,6 @@ $(document).ready(function(){
             },
             headers: {'X-CSRFToken': csrftoken}, 
             success: function(response) {
-                console.log(response)
                 $('#student-name').text(response.name)
                 $('#school-year').text(response.schoolyear)
                 $('#student-course').text(`${response.program}.`)
@@ -148,12 +147,12 @@ $(document).ready(function(){
             }
         });
     });
-    $('.closeform').click(function(){
+    $(document).on('click','.closeform', function(){
         $('.showform_container').removeClass('active');
     });
     
     // Event listener for decline button
-    $('.decline').click(function() {
+    $(document).on('click','.decline' , function() {
         let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
@@ -177,7 +176,7 @@ $(document).ready(function(){
         });
     });
 
-    $('.saveButton').click(function(){
+    $(document).on('click','.saveButton' ,function(){
         const elements = document.getElementById("paper");
         const student_name = $('#student-name').text()
         const options = {
@@ -194,7 +193,7 @@ $(document).ready(function(){
             .save();
     });
     // Event listener for delete button
-    $('.delete').click(function() {
+    $(document).on('click','.delete', function() {
         let OjtRequestID = $(this).closest('tr').find('.OjtRequestID').val();
         let parentRow = $(this).closest('tr')
         $.post({

@@ -69,6 +69,14 @@ class ExitInterviewForm(forms.ModelForm):
             'emailadd': forms.EmailInput(attrs={
                 'placeholder': 'Enter your email address.'
             }),
+            'intendedMajor': forms.TextInput(attrs={
+                'placeholder': 'Enter your intended major.',
+                'class': 'table_input hidden'
+            }),
+            'majorEvent': forms.TextInput(attrs={
+                'placeholder': 'Enter your reason.',
+                'class': 'table_input hidden'
+            }),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,6 +87,7 @@ class ExitInterviewForm(forms.ModelForm):
         self.fields['whatCondition'].required = False
         self.fields['planTOReturn'].required = False
         self.fields['intendedMajor'].required = False
+        self.fields['majorEvent'].required = False
 
 
 

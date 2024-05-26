@@ -82,6 +82,8 @@ $(document).ready(function(){
             
                     $('#info_table').append(
                         '<tr>' +
+                        `<input type="hidden" name="exitinterviewId" class="exitinterviewId"
+                        value="${student.exit_interview_id}">`+
                         '<td>' + student.date_received + '</td>' +
                         '<td>' + student.student_id + '</td>' +
                         '<td>' + student.name + '</td>' +
@@ -104,7 +106,7 @@ $(document).ready(function(){
             }
         });
     });
-    $('.accept').click(function() {
+    $(document).on('click','.accept' ,function() {
         let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
@@ -238,7 +240,7 @@ $(document).ready(function(){
         });
     });
     
-    $('.saveButton').click(function(){
+    $(document).on('click','.saveButton' ,function(){
         const elements = document.getElementById("paper");
         const student_name = $('#student-name').text()
         const options = {
@@ -258,7 +260,7 @@ $(document).ready(function(){
         $('.showform_container').removeClass('active');
     });
     // Event listener for decline button
-    $('.decline').click(function() {
+    $(document).on('click', '.decline' ,function() {
         let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
         let statusSpan = $(this).closest('tr').find('.pending');
         let accept = $(this).closest('tr').find('.accept');
@@ -283,7 +285,7 @@ $(document).ready(function(){
     });
 
     // Event listener for delete button
-    $('.delete').click(function() {
+    $(document).on('click','.delete' ,function() {
         let exitinterviewId = $(this).closest('tr').find('.exitinterviewId').val();
         let parentRow = $(this).closest('tr')
         $.post({
