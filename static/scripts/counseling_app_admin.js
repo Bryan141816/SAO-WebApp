@@ -67,4 +67,73 @@ $(document).ready(function(){
             }
         });
     });
+    
+    $('.accept').click(function() {
+        let counselingID = $(this).closest('tr').find('.counselingID').val();
+        let statusSpan = $(this).closest('tr').find('.pending');
+        let accept = $(this).closest('tr').find('.accept');
+        let decline = $(this).closest('tr').find('.decline');
+        // Perform further actions here, such as sending the ID to the server
+        $.post({
+            url: '/update_counseling_schedule/',
+            data: { 'counselingID': counselingID, 'type': 'accept' },
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            headers: {'X-CSRFToken': csrftoken}, 
+            success: function(response) {
+                statusSpan.replaceWith(' <span class="accepted">Accepted</span>')
+                accept.remove()
+                decline.remove()
+            },
+            error: function(xhr, status, error) {
+                // Handle error if needed
+            }
+        });
+    });
+
+    // Event listener for decline button
+    $('.decline').click(function() {
+        let counselingID = $(this).closest('tr').find('.counselingID').val();
+        let statusSpan = $(this).closest('tr').find('.pending');
+        let accept = $(this).closest('tr').find('.accept');
+        let decline = $(this).closest('tr').find('.decline');
+        // Perform further actions here, such as sending the ID to the server
+        $.post({
+            url: '/update_counseling_schedule/',
+            data: { 'counselingID': counselingID, 'type': 'decline' },
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            headers: {'X-CSRFToken': csrftoken}, 
+            success: function(response) {
+                statusSpan.replaceWith(' <span class="declined">Declined</span>')
+                accept.remove()
+                decline.remove()
+            },
+            error: function(xhr, status, error) {
+                // Handle error if needed
+            }
+        });
+    });
+
+    // Event listener for delete button
+    $('.delete').click(function() {
+        let counselingID = $(this).closest('tr').find('.counselingID').val();
+        let parentRow = $(this).closest('tr')
+        $.post({
+            url: '/delete_counseling_schedule/',
+            data: { 'counselingID': counselingID },
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            headers: {'X-CSRFToken': csrftoken}, 
+            success: function(response) {
+                parentRow.remove()
+            },
+            error: function(xhr, status, error) {
+                // Handle error if needed
+            }
+        });
+    });
 });

@@ -39,6 +39,8 @@
                 </tr>
                 {% for schedule_request in meeting_requests %}
                     <tr>
+                        <input type="hidden" name="counselingID" class="counselingID"
+                    value="{{ schedule_request.counselingID }}">
                         <td>{{ schedule_request.dateRecieved }}</td>
                         <td>{{ schedule_request.studentID.lastname }}, {{ schedule_request.studentID.firstname }}</td>
                         <td>{{ schedule_request.studentID.degree }} {{ schedule_request.studentID.yearlvl }}</td>
@@ -60,12 +62,11 @@
                         </td>                        
                         <td>
                             <div class="horizontal">
-                                <input type="hidden" id="studentID" value="{{ schedule_request.studentID.studID }}">
                                 {% if schedule_request.status != 'Expired' and schedule_request.status != 'Accepted' and schedule_request.status != 'Declined' %}
-                                    <button class="accept" id="acceptButton">ACCEPT</button>
-                                    <button class="decline" id="declineButton">DECLINE</button>
+                                    <button class="accept">ACCEPT</button>
+                                    <button class="decline">DECLINE</button>
                                 {% endif %}
-                                <button class="delete" id="delete">DELETE</button>
+                                <button class="delete">DELETE</button>
                             </div>
                         </td>
                         
@@ -75,6 +76,5 @@
             </table>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{% static 'scripts/counseling_app.js'%}"></script>
+    <script src="{% static 'scripts/counseling_app_admin.js'%}"></script>
 {% endblock %}
