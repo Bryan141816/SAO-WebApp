@@ -1,4 +1,24 @@
 $(document).ready(function(){
+
+    $('#consent_container').addClass('active');
+    console.log('test');
+
+    $("#agreeCheck").change((event)=>{
+        if($('#agreeCheck').is(':checked')){
+            $('#proceedBtn').prop('disabled', false);
+            $('#proceedBtn').removeClass('disabled');
+        }
+        else{
+            $('#proceedBtn').prop('disabled', true);
+            $('#proceedBtn').addClass('disabled');
+        }
+    });
+
+    $(document).on('click','#proceedBtn' ,function(event){
+        event.preventDefault();
+        $('#consent_container').removeClass('active');
+    });
+
     $('input[name="currentlyEmployed"]').change(function(){
         $('#explainationEmployed').removeClass('hidden')
         let selectedValue = $('input[name="currentlyEmployed"]:checked').val();

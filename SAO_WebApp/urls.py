@@ -24,7 +24,7 @@ urlpatterns = [
     path('exit_interview/admin/',exit_interview_admin_view,name="Exit Interview Admin View"),
     path('search_exit_interview_request/', search_exit_interview_request, name='search_exit_interview_request'),
 
-    #Exti Interview Searcher, Validator,Updator URLS
+    #Exit Interview Searcher, Validator,Updator URLS
     path('search_student_info/', search_student_info, name='search_student_info'),
     path('check_date_time_validity_for_exit/',check_date_time_validity_for_exit,name='check_date_time_validity_for_exit'),
     path('update_exit_interview_status/', update_exit_interview_status, name='update_exit_interview_status'),

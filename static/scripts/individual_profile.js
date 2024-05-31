@@ -1,4 +1,24 @@
 $(document).ready(function(){
+    $('#consent_container').addClass('active');
+
+    $("#agreeCheck").change((event)=>{
+        if($('#agreeCheck').is(':checked')){
+            $('#proceedBtn').prop('disabled', false);
+            $('#proceedBtn').removeClass('disabled');
+        }
+        else{
+            $('#proceedBtn').prop('disabled', true);
+            $('#proceedBtn').addClass('disabled');
+        }
+    });
+
+    $(document).on('click','#proceedBtn' ,function(event){
+        event.preventDefault();
+        $('#consent_container').removeClass('active');
+    });
+
+
+
     $("#addanother").on("click", function(event){
         event.preventDefault();
         let newRow = $(".sibllingsrowTemplate").clone(true);

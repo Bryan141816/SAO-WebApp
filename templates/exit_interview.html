@@ -2,11 +2,27 @@
 {% load static %}
 {% block headcontent %}
     <link rel="stylesheet" href="{% static 'stylesheet/exit_interview.css'%}">
+    <link rel="stylesheet" href="{% static 'stylesheet/consent_form.css'%}">
+
 {% endblock %}
 
 
 {% block bodycontent %}
-    
+    <div class="showform_container" id="consent_container">
+        <div class="form_container">
+            <h2>Informed Consent Form</h2>
+            <p class="with-indent">
+                By checking the box below, I agree to fill out the Exit Interview Sheet for the Guidance Office. I commit to providing honest and complete information. I trust that the Guidance Staff will handle my personal data with the utmost confidentiality.
+            </p>
+            <div>
+                <label>
+                    <input type="checkbox" id="agreeCheck">
+                    I agree.
+                </label>
+            </div>
+            <button class="actionButton disabled" disabled id="proceedBtn">Proceed</button>
+        </div>
+    </div>
     <div class="container">
         {{form.errors}}
         <h3>GUIDANCE</h3>
