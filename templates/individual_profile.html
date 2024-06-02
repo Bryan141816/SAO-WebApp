@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="{% static 'stylesheet/individual_profile.css'%}">
 {% endblock %}
 {% block bodycontent %}
-<form action="" method="POST" enctype="multipart/form-data">
     <div class="showform_container" id="consent_container">
         <div class="form_container">
             <h2>Informed Consent Form</h2>
@@ -21,7 +20,278 @@
         </div>
     </div>
     
-    {% csrf_token %}
+
+    <div class="container">
+        {{form.errors}}
+        <h3>GUIDANCE</h3>
+        <span><label id="dir-gray">Home</label><label id="dir-orange"> > Individual Profile </label></span>
+        <div class="form-container">
+            <form>
+                {% csrf_token %}
+                <h2 width="width: 100%;">Fill Out Individual Profile</h2>
+                <label>Enter ID number:</label>
+                <span id="search_id">
+                    <input type="text" name="studentID" placeholder="search" required="" id="studentIDBox">
+                    <button class="OrangeButton" id="searchButton">Search</button>
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </span>
+                <table id="info_table" class="hidden">
+                    <tr id="info_table_head">
+                        <th>NAME</th>
+                        <th>COURSE</th>
+                        <th>Sex</th>
+                    </tr>
+                </table>
+            </form>
+            <form method="post" action="" id="requestForm" class="">
+                <div class="page_counter_container">
+                    <div class="page_viewer current-fill-out">1</div>
+                    <div class="page_viewer">2</div>
+                    <div class="page_viewer">3</div>
+                    <div class="page_viewer">4</div>
+                    <div class="page_viewer">5</div>
+                    <div class="page_viewer">6</div>
+                    <div class="page_viewer">7</div>
+                    <div class="page_viewer">8</div>
+                    <div class="page_viewer">9</div>
+                </div>
+                {% csrf_token %}
+                <div class="slider">
+                    
+                    <div class="fill_out_container current-page-activated">
+                        <h2>Please fill out each information</h2>
+                        <label>Please upload a 2x2 photo.</label>
+                        {{form.studentPhoto}}
+                        <label>Enter your Nickname.</label>
+                        {{form.nickName}}
+                        <label>Enter your year level and section.</label>
+                        <div class="two_input_container">
+                            {{form.yearlvl}}
+                            {{form.section}}
+                        </div>
+                        <label>Enter your major.</label>
+                        {{form.major}}
+                        <label>Are you a ___?</label>
+                        {{form.studentType}}
+                        <div id="hs_curriculum" class="hidden">
+                            <label>What highschool curriculum you had?</label>
+                            {{form.curriculumtype}}
+                        </div>
+                        <div id="hs_track" class="hidden">
+                            <label>What track did you pick?</label>
+                            {{form.track}}
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+    
+                    <div class="fill_out_container hidden">
+                        <h2>A. Personal Data</h2>
+                        <div class="two_input_container">
+                            <label>Enter your birthdate:</label>
+                            <label>Enter your place of birth:</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.dateOfBirth}}
+                            {{form.placeOfBirth}}
+                        </div>
+                        <label>Enter your religion.</label>
+                        {{form.religion}}
+                        <div class="two_input_container">
+                            <label>Enter your height in centimeter.</label>
+                            <label>Enter your weight in kilograms.</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.height}}
+                            {{form.weight}}
+                        </div>
+                        <label>What is your birth order among your siblings?</label>
+                        {{form.birthOrderAmongSiblings}}
+                        <label>What is your Sexual Orientation?</label>
+                        {{form.sexualOrientation}}
+                        <label>What is your Civil Status?</label>
+                        {{form.civilStatus}}
+                        <label>What is your citizenship?</label>
+                        {{form.citizenship}}
+                        <div class="two_input_container">
+                            <label>Where is your current address?</label>
+                            <label>What is your permanent address?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.currentAddress}}
+                            {{form.permanentAddress}}
+                        </div>
+                        <div class="two_input_container">
+                            <label>Enter your mobile number:</label>
+                            <label>Enter your email address:</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.mobileNo}}
+                            {{form.email}}
+                        </div>
+                        <label>Enter your landline number: <label style="color: rgb(0, 4, 255)">*leave it blank if you don't have any.</label></label>
+                        {{form.landlineNo}}
+                        <div class="two_input_container">
+                            <label>What is your langauages/dialect spoken at home?</label>
+                            <label>What is your langauages/dialect your most fluent in?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.languagesDialectsSpokenAtHome}}
+                            {{form.languagesDialectsMostFluentIn}}
+                        </div>
+                        <label>With whom are you living?</label>
+                        {{form.livingWith}}
+                        <div id="living_specify" class="hidden">
+                            <label>Please Specify:</label>
+                            {{form.livingSpecify}}
+                        </div>
+                        <label>While studying in CTU, where are you living?</label>
+                        {{form.placeOfLiving}}
+                        <div id="place_of_living_other" class="hidden">
+                            <label>Please specify:</label>
+                            {{form.placeOfLivingOthers}}
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>B. Family Data</h2>
+                        <table class="fullLenght">
+                            <tr>
+                                <th class="smallitem"></th>
+                                <th>Father(Mark with + if deceased)</th>
+                                <th>Mother(Mark with + if decreased)</th>
+                            </tr>
+                            <tr>
+                                <td class="smallitem">Name:</td>
+                                <td><div class="field_container">{{form.fatherName}}</div></td>
+                                <td><div class="field_container">{{form.motherName}}</div></td>
+                            </tr>
+                            <tr>
+                                <td class="smallitem">Date of Birth:</td>
+                                <td><div class="field_container">{{form.fatherDateOfBirth}}</div></td>
+                                <td><div class="field_container">{{form.motherDateOfBirth}}</div></td>
+                            </tr>
+                            <tr>
+                                <td class="smallitem">Address:</td>
+                                <td><div class="field_container">{{form.fatherAddress}}</div></td>
+                                <td><div class="field_container">{{form.motherAddress}}</div></td>
+                            </tr>
+                            <tr>
+                                <td class="smallitem">Landline:</td>
+                                <td><div class="field_container">{{form.fatherLandline}} </div></td>
+                                <td><div class="field_container">{{form.motherLandLine}} </div></td>
+                            </tr>
+                            <tr>
+                                <td class="smallitem">Mobile Number (Cellphone No.):</td>
+                                <td><div class="field_container">{{form.fatherMobilePhone}}</div></td>
+                                <td><div class="field_container">{{form.motherMobilePhone}}</div></td>
+                            </tr>
+                        </table>
+                        <div class="two_input_container">
+                            <label>What is your father's highest educational attainment?</label>
+                            <label>What is your mother's highest educational attainment?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.fatherEducationLevel}}
+                            {{form.motherEducationLevel}}
+                        </div>
+                        <div class="two_input_container">
+                            <label>Is your father a graduate of CTU?</label>
+                            <label>Is your mother a graduate of CTU?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.fatherCTU}}
+                            {{form.motherCTU}}
+                        </div>
+                        <label>What is the family's main source of income?</label>
+                        {{form.sourceOfIncome}}
+                        <div id="source_income_container" class="hidden">
+                            <label>Please specify:</label>
+                            {{form.sourceOfIncomeSpecify}}
+                        </div>
+                        <div class="two_input_container">
+                            <label>What is your father's occupation? <label style="color: rgb(0, 4, 255)">(If father is deceased, please do not answer)</label></label>
+                            <label>What is your mothers's occupation? <label style="color: rgb(0, 4, 255)">(If father is deceased, please do not answer)</label></label>
+                        </div>
+                        <div class="two_input_container">
+                                {{form.fatherOccupation}}
+                                {{form.motherOccupation}}
+                        </div>
+                        <div class="two_input_container">
+                            <div id="father_occupation_other" class="others_container hidden">
+                                <label>Please specify:</label>
+                                {{form.fatherOtherOccupation}}
+                            </div>
+                            <div id="mother_occupation_other" class="others_container hidden">
+                                <label>Please specify:</label>
+                                {{form.motherOtherOccupation}}
+                            </div>
+                        </div>
+                        <label>How much is your family earning in a month?</label>
+                        {{form.familyEarningInaMonth}}
+                        <label>Parents are:</label>
+                        {{form.parentStatus}}
+                        <table id="siblings" class="fullLenght">
+                            <tr>
+                                <th colspan="3">
+                                    <label>Please name below siblings from eldest to youngest. Include yourself.</label>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>School/Place of Work</th>
+                            </tr>
+                            <tr class="sibllingsrowTemplate">
+                                <td>
+                                    <div class="field_container">
+                                        <input type="text" name="name[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <input type="number" name="age[]">
+                                    </div>      
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <input type="text" name="placework[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <button class="deleteRow OrangeButton">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="center_object">
+                            <button id="addanother" class="OrangeButton">Add another</button>
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>B. Family Data</h2>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     {{form.errors}}
-</form>
+    <script src="{% static 'scripts/individual_profile.js'%}"></script>
 {% endblock %}

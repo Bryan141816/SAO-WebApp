@@ -21,13 +21,38 @@ $(document).ready(function(){
 
     $("#addanother").on("click", function(event){
         event.preventDefault();
-        let newRow = $(".sibllingsrowTemplate").clone(true);
-        newRow.removeClass("sibllingsrowTemplate");
-        newRow.find('input').each(function() { // Clear the input values
-            $(this).val("");
-        });
+        let newRow = `<tr class="sibllingsrowTemplate">
+                        <td>
+                            <div class="field_container">
+                                <input type="text" name="name[]">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="field_container">
+                                <input type="number" name="age[]">
+                            </div>      
+                        </td>
+                        <td>
+                            <div class="field_container">
+                                <input type="text" name="placework[]">
+                            </div>
+                        </td>
+                        <td>
+                            <button class="deleteRow OrangeButton">Delete</button>
+                        </td>
+                    </tr>`
         $("#siblings").append(newRow);
     });
+    $("#siblings").on("click", ".deleteRow", function(event) {
+        event.preventDefault();
+        var rowCount = $("#siblings tr.sibllingsrowTemplate").length;
+        if (rowCount > 1) {
+            $(this).closest("tr").remove();
+        } else {
+            $(this).closest("tr").find("input").val("");
+        }
+    });
+
     $("#addOrganization").on("click", function(event){
         event.preventDefault();
         let newRow = $(".orgRowTemplate").clone(true);
@@ -45,24 +70,13 @@ $(document).ready(function(){
         let selectedValue = $(this).val();
     
         console.log(selectedValue)
-        if(selectedValue == "familyownedbusiness"){
-            $("#id_sourceOfIncomeFamilyBusiness").removeClass("hidden")  
-            $("#sourceIncome").removeClass("fullLenght")       
-
-            $("#id_sourceOfIncomeRelative").addClass("hidden")
-            $("#optionalBox").addClass("visible")
-        }
-        else if(selectedValue == "relatives"){
-            $("#id_sourceOfIncomeFamilyBusiness").addClass("hidden")  
-            $("#sourceIncome").removeClass("fullLenght")          
-            $("#id_sourceOfIncomeRelative").removeClass("hidden")
-            $("#optionalBox").addClass("visible")
+        if(selectedValue == "familyownedbusiness" || selectedValue == "relatives"){
+            $("#source_income_container").removeClass("hidden")
+            $('#id_sourceOfIncomeSpecify').attr('required','required')
         }
         else{
-            $("#id_sourceOfIncomeFamilyBusiness").addClass("hidden")
-            $("#sourceIncome").addClass("fullLenght")   
-            $("#id_sourceOfIncomeRelative").addClass("hidden")
-            $("#optionalBox").removeClass("visible")
+            $("#source_income_container").addClass("hidden")
+            $('#id_sourceOfIncomeSpecify').removeAttr('required','required')
         }
     })
     $("#id_studentType").change(function(event){
@@ -70,12 +84,12 @@ $(document).ready(function(){
     
         console.log(selectedValue)
         if(selectedValue == "newStudent"){
-            $("#id_curriculumtype").removeClass("hidden")         
-            $("#studentbox").addClass("visible")
+            $("#hs_curriculum").removeClass("hidden")
+            $('#id_curriculumtype').attr('required','required')
         }
         else{
-            $("#id_curriculumtype").addClass("hidden")
-            $("#studentbox").removeClass("visible")
+            $("#hs_curriculum").addClass("hidden")
+            $('#id_curriculumtype').removeAttr('required','required')
         }
     })
     $("#id_curriculumtype").change(function(event){
@@ -83,33 +97,24 @@ $(document).ready(function(){
     
         console.log(selectedValue)
         if(selectedValue == "seniorhigh"){      
-            $("#trackbox").addClass("visible")
+            $("#hs_track").removeClass("hidden")
+            $("#id_track").attr('required','required')
         }
         else{
-            $("#trackbox").removeClass("visible")
+            $("#trackbox").addClass("hidden")
+            $("#id_track").removeAttr('required','required')
         }
     })
     $("#id_livingWith").change(function(event){
         let selectedValue = $(this).val();
-    
-        console.log(selectedValue)
-        if(selectedValue=="relative"){
-            $("#livingBox").removeClass("fullLength")
-            $("#livingBox").addClass("halfLength")
-            $("#livingOthers").addClass("hidden")
-            $("#relativeBox").removeClass("hidden")
-        }
-        else if(selectedValue=="others"){
-            $("#livingBox").removeClass("fullLength")
-            $("#livingBox").addClass("halfLength")
-            $("#relativeBox").addClass("hidden")
-            $("#livingOthers").removeClass("hidden")
+
+        if(selectedValue=="relative" || selectedValue == "others"){
+            $("#living_specify").removeClass("hidden")
+            $("#id_livingSpecify").attr('required','required')
         }
         else{
-            $("#livingBox").removeClass("halfLength")
-            $("#livingBox").addClass("fullLength")
-            $("#relativeBox").addClass("hidden")
-            $("#livingOthers").addClass("hidden")
+            $("#living_specify").addClass("hidden")
+            $("#id_livingSpecify").removeAttr('required','required')
         }
     })
     
@@ -118,13 +123,12 @@ $(document).ready(function(){
     
         console.log(selectedValue)
         if(selectedValue == "others"){
-            $("#specifyPlace").removeClass("hidden")
-            $("#specifyPlace").addClass("visible")
-                  
+            $("#place_of_living_other").removeClass("hidden")
+            $("#id_placeOfLivingOthers").attr('required','required')
         }
         else{
-            $("#specifyPlace").removeClass("visible")
-            $("#specifyPlace").addClass("hidden")
+            $("#place_of_living_other").addClass("hidden")
+            $("#id_placeOfLivingOthers").removeAttr('required','required')
         }
     })
     
@@ -133,15 +137,12 @@ $(document).ready(function(){
     
         console.log(selectedValue)
         if(selectedValue == "others"){
-            
-            $("#fatherOcupation").removeClass("fullLength")
-            $("#fatherOcupation").addClass("halfLength")
-            $("#fatherOcupationOther").removeClass("hidden")
+            $("#father_occupation_other").removeClass("hidden")
+            $("#id_fatherOtherOccupation").attr('required','required')
         }
         else{
-            $("#fatherOcupation").addClass("fullLength")
-            $("#fatherOcupation").removeClass("halfLength")
-            $("#fatherOcupationOther").addClass("hidden")
+            $("#father_occupation_other").addClass("hidden")
+            $("#id_fatherOtherOccupation").removeAttr('required','required')
         }
     })
     $("#id_motherOccupation").change(function(event){
@@ -149,15 +150,12 @@ $(document).ready(function(){
     
         console.log(selectedValue)
         if(selectedValue == "others"){
-            
-            $("#motherOcupation").removeClass("fullLength")
-            $("#motherOcupation").addClass("halfLength")
-            $("#motherOcupationOther").removeClass("hidden")
+            $("#mother_occupation_other").removeClass("hidden")
+            $("#id_motherOtherOccupation").attr('required','required')
         }
         else{
-            $("#motherOcupation").addClass("fullLength")
-            $("#motherOcupation").removeClass("halfLength")
-            $("#motherOcupationOther").addClass("hidden")
+            $("#mother_occupation_other").addClass("hidden")
+            $("#id_motherOtherOccupation").removeAttr('required','required')
         }
     })
     $("#id_schoolLeaver_0").change(function(event){
@@ -204,5 +202,59 @@ $(document).ready(function(){
         if($(this).val()){
             $("#spificyWhyDontPlantToWork").removeClass("hidden")
         }
+    });
+
+    function validateFields(container) {
+        var isValid = true;
+        container.find('input, select, textarea').each(function() {
+            if ($(this).prop('required')) {
+                if (!$(this).val()) {
+                    isValid = false;
+                }
+            }
+        });
+        return isValid;
+    }
+
+    $('.nextpage').on('click', function() {
+        let current = $('.current-page-activated');
+        let next = current.next('.fill_out_container');
+        let curret_page_counter = $('.current-fill-out');
+        let next_page_counter = curret_page_counter.next('.page_viewer');
+
+        current.removeClass('current-page-activated').addClass('current-page-deactivated');
+        curret_page_counter.removeClass('current-fill-out');
+        next_page_counter.addClass('current-fill-out');
+        setTimeout(function() {
+            current.addClass('hidden');
+            next.removeClass('hidden').addClass('current-page-activated');
+            current.removeClass('current-page-deactivated');
+        }, 200);
+
+        // if(validateFields(current)){
+        //     current.removeClass('current-page-activated').addClass('current-page-deactivated');
+        //     curret_page_counter.removeClass('current-fill-out');
+        //     next_page_counter.addClass('current-fill-out');
+        //     setTimeout(function() {
+        //         current.addClass('hidden');
+        //         next.removeClass('hidden').addClass('current-page-activated');
+        //         current.removeClass('current-page-deactivated');
+        //     }, 200);
+        // }
+    });
+    $('.prevPage').on('click',()=>{
+        let current = $('.current-page-activated');
+        let prev = current.prev('.fill_out_container');
+        let curret_page_counter = $('.current-fill-out');
+        let prev_page_counter = curret_page_counter.prev('.page_viewer');
+        current.removeClass('current-page-activated');
+        curret_page_counter.removeClass('current-fill-out');
+        prev_page_counter.addClass('current-fill-out');
+        setTimeout(function() {
+            current.addClass('hidden');
+            prev.removeClass('hidden').addClass('current-page-activated');
+            current.removeClass('current-page-deactivated');
+        }, 200);
+    
     });
 });

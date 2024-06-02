@@ -118,30 +118,21 @@ class IndividualProfileForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['elementaryType'].widget.attrs.update({'class': 'side-way'})
-        self.fields['seniorHighSchoolType'].widget.attrs.update({'class': 'side-way'})
-        self.fields['schoolLeaver'].widget.attrs.update({'class': 'side-way'})
-        self.fields['schoolLeaver'].widget.attrs.update({'class': 'side-way'})
-        self.fields['fatherCTU'].widget.attrs.update({'class': 'side-way'})
-        self.fields['motherCTU'].widget.attrs.update({'class': 'side-way'})
-        self.fields['doYouPlanToWork'].widget.attrs.update({'class': 'side-way'})
-        self.fields['sourceOfIncomeFamilyBusiness'].widget.attrs.update({'class': 'hidden'})
-        self.fields['sourceOfIncomeRelative'].widget.attrs.update({'class': 'hidden'})
-        self.fields['curriculumtype'].widget.attrs.update({'class': 'hidden'})
-
+        self.fields['curriculumtype'].required = False
+        self.fields['fatherMobilePhone'].required = False
+        self.fields['motherMobilePhone'].required = False
+        self.fields['fatherEducationLevel'].required = False
+        self.fields['motherEducationLevel'].required = False
         self.fields['track'].required = False
-        self.fields['livingWithRelative'].required = False
-        self.fields['livingWithOthers'].required = False
+        self.fields['livingSpecify'].required = False
         self.fields['placeOfLivingOthers'].required = False
-        self.fields['sourceOfIncomeFamilyBusiness'].required = False
-        self.fields['sourceOfIncomeRelative'].required = False
+        self.fields['sourceOfIncomeSpecify'].required = False
         self.fields['fatherOtherOccupation'].required = False
         self.fields['motherOtherOccupation'].required = False
         self.fields['typeOfScholarship'].required = False
         self.fields['specifyScholarship'].required = False
         self.fields['schoolLeaverWhy'].required = False
         self.fields['specifyIfNo'].required = False
-        self.fields['middleName'].required = False
         self.fields['nickName'].required = False
         self.fields['landlineNo'].required = False
         self.fields['fatherLandline'].required = False

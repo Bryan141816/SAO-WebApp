@@ -1,10 +1,11 @@
+
 #dir-gray{
   color: #636363;
 }
 .container{
   display: flex;
   flex-direction: column;
-  width: 100%;;
+  width: 100%;
   padding: 20px;
 }
 #dir-orange{
@@ -18,7 +19,6 @@
   width: 100%;
   border: 1px solid #e2e2e2;
   border-radius: 10px;
-  gap: 10px;
 }
 .form-container form{
   display: flex;
@@ -51,7 +51,7 @@
   padding-left: 10px;
   align-items: left;
   color: black;
-  width: 200px;
+  max-width: 200px;
 }
 .OrangeButton{
   background-color: #FF8000;
@@ -82,23 +82,28 @@
 #info_table_head{
   background-color: #f1f1f1;
 }
-
-
-/*ambot wako ka sabot*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#requestScheduleContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 9.6px;
+}
+#requestForm{
+  display: flex;
+}
+#datetimepicker{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+#datetimepicker input, #datetimepicker select{
+  max-width: 150px;
+}
+.hidden{
+  display: none !important;
+}
 
 
 .field_container input, .field_container2 input{
@@ -181,6 +186,110 @@
 }
 
 
+.slider{
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+}
+
+.page_counter_container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 50px;
+  padding: 20px;
+}
+.fill_out_container{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #e2e2e2;
+  border-radius: 20px;
+  padding: 20px;
+  gap: 10px;
+  transform: translateX(500px);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.current-page-activated{
+  transform: translateX(0px);
+  opacity: 100;
+}
+.current-page-deactivated{
+  transform: translateX(-1000px);
+  opacity: 0;
+}
+.page_viewer{
+  display: flex;
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: white;
+}
+.current-fill-out{
+  background-color: #FF8000;
+  color: white;
+}
+.fill_out_container input[type="text"],
+.fill_out_container input[type="number"],
+.fill_out_container input[type="date"],
+.fill_out_container input[type="email"],
+.fill_out_container select {
+  background-color: #DDDFEE;
+  padding: 9.6px;
+  border: transparent;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding-left: 10px;
+  color: black;
+  width: 100%;
+}
+.fill_out_container input[type="file"]::-webkit-file-upload-button{
+  background-color: #FF8000;
+  padding: 9.6px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 100px;
+}
+.two_input_container{
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  & input, & label, & div{
+    width: 50%;
+  }
+  & div{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  & div div{
+    width: max-content !important;
+  }
+}
+.others_container{
+  display: flex;
+  flex-direction: column !important;
+  gap: 10px;
+  width: 100%;
+}
+
+.center_object{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+
 
 
 
@@ -228,7 +337,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
-    z-index: 1;
+    z-index: 100;
   }
   
   .showform_container.active {

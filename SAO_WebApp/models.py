@@ -105,7 +105,7 @@ class OjtAssessment(models.Model):
         ('Expired' , 'Expired')
     ]
     status = models.CharField(max_length=10, choices=approval_status, default='Pending')
-    dateAccepted = models.DateField(default=timezone.now())
+    dateAccepted = models.DateField()
     emailadd = models.EmailField()
 
 class counseling_schedule(models.Model):
@@ -136,14 +136,13 @@ class counseling_schedule(models.Model):
 
 class IndividualProfileBasicInfo(models.Model):
 
+    studentId = models.ForeignKey(studentInfo, on_delete=models.CASCADE)
     studentPhoto = models.FileField(upload_to='media/studentPhoto')
-    familyName = models.CharField(max_length=255)
-    firstname = models.CharField(max_length=255)
-    middleName = models.CharField(max_length=255)
+    
     nickName = models.CharField(max_length=255)
-    courseyearsection = models.CharField(max_length=255)
+    yearlvl = models.IntegerField()
+    section = models.CharField(max_length=255)
     major = models.CharField(max_length=255)
-    studentId = models.IntegerField()
     dateFilled = models.DateField()
 
     studentTypeChoices = [
@@ -164,7 +163,7 @@ class IndividualProfileBasicInfo(models.Model):
         ('seniorhigh','Senior High School Graduate'),
     ]
 
-    curriculumtype = models.CharField(max_length=50, choices=curriculumtypeChoices, default='')
+    curriculumtype = models.CharField(max_length=50, choices=curriculumtypeChoices)
 
     track = models.CharField(max_length=255, default='') #Will only be used if curriculumtype is senior high
 
@@ -173,12 +172,6 @@ class IndividualProfileBasicInfo(models.Model):
     height = models.DecimalField(max_digits=10,decimal_places=2)
     weight = models.DecimalField(max_digits=10,decimal_places=2)
     birthOrderAmongSiblings = models.CharField(max_length=10)
-
-    sexChoices = [
-        ('male','Male'),
-        ('female','Female'),
-    ]
-    sex = models.CharField(max_length=7, choices=sexChoices)
 
     sexualOrientationChoices = [
         ('heterosexual','Heterosexual'),
@@ -213,8 +206,8 @@ class IndividualProfileBasicInfo(models.Model):
 
     livingWith = models.CharField(max_length=15, choices=livingWithChoices)
     
-    livingWithRelative = models.CharField(max_length=255,default='')# Will be used if living with relative is true
-    livingWithOthers = models.CharField(max_length=255,default='') # Will be used if living with others is true
+    livingSpecify = models.CharField(max_length=255,default='')# Will be used if living with relative is true
+   
 
     placeOfLivingChoices = [
         ('dormitory','Dormitory'),
@@ -260,8 +253,7 @@ class IndividualProfileBasicInfo(models.Model):
         ('relatives','Relative(s)'),
     ]
     sourceOfIncome = models.CharField(max_length=30, choices=sourceOfIncomeChoices)
-    sourceOfIncomeFamilyBusiness = models.CharField(max_length=255,default='') #Will be used if family business is picked
-    sourceOfIncomeRelative = models.CharField(max_length=255,default='') #Will be used if relative is picked
+    sourceOfIncomeSpecify = models.CharField(max_length=255,default='')
 
     parentsOccupationChoices = [
         ('agriculture','Agriculture, Food and Natural Resources'),
