@@ -4,13 +4,17 @@ from .views import home, counseling_app,exit_interview,individualProfile,search_
 from .views import counseling_app_admin_view,ojt_assessment,exit_interview_admin_view, ojt_assessment_admin_view,update_exit_interview_status
 from .views import delete_exit_interview_status, update_ojt_assessment, delete_ojt_assessment,check_date_time_validity_for_exit, get_ojt_assessment_data
 from .views import search_ojt_assessment_request,search_exit_interview_request, get_exit_interview_request,update_counseling_schedule, delete_counseling_schedule
-from .views import search_student_info_for_individual
+from .views import search_student_info_for_individual, intake_interview_view, search_student_info_for_intake
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home, name="Home"),
     #Individual Profile URLS
     path('individual_profile',individualProfile,name="Individual Profile"),
     path('search_student_info_for_individual_profile/', search_student_info_for_individual, name='search_student_info_for_individual_profile'),
+
+    #Intake Interview URLS
+    path('intake_interview/',intake_interview_view, name="Intake Interview"),
+    path('search_student_info_for_intake/', search_student_info_for_intake, name='search_student_info_for_intake'),
 
     #Counseling App Views URLS
     path('counseling_app/', counseling_app, name="Counseling App With Scheduler"),

@@ -117,6 +117,7 @@ class IndividualProfileForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['personInCaseofEmergencyLandline'].required = False
         self.fields['curriculumtype'].required = False
         self.fields['fatherMobilePhone'].required = False
         self.fields['motherMobilePhone'].required = False

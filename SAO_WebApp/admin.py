@@ -1,12 +1,17 @@
 from django.contrib import admin
-from .models import IndividualProfileBasicInfo, TestArray,FileUploadTest, counseling_schedule, studentInfo, exit_interview_db, OjtAssessment
+from .models import IndividualProfileBasicInfo, TestArray,FileUploadTest, counseling_schedule, studentInfo, exit_interview_db, OjtAssessment, IntakeInverView
 
 class IndividualProfileBasicInfoAdmin(admin.ModelAdmin):
     def __init__(self, model, admin_site):
         self.list_display = [field.name for field in model._meta.get_fields()]
         super().__init__(model, admin_site)
+class IntakeInverViewAdmin(admin.ModelAdmin):
+    def __init__(self, model, admin_site):
+        self.list_display = [field.name for field in model._meta.get_fields()]
+        super().__init__(model, admin_site)
 
 admin.site.register(IndividualProfileBasicInfo)
+admin.site.register(IntakeInverView)
 
 class StudentInfoAdmin(admin.ModelAdmin):
     list_display = ('studID', 'lrn', 'lastname', 'firstname', 'middlename', 'degree', 'yearlvl', 'sex', 'emailadd', 'contact')

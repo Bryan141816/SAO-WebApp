@@ -358,7 +358,6 @@ $(document).ready(function(){
             }
         });
     
-        // Check if at least one radio button in each group is checked
         Object.values(radioGroups).forEach(function(value) {
             if (!value) {
                 isValid = false;

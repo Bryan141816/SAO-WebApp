@@ -135,8 +135,8 @@ class counseling_schedule(models.Model):
     status = models.CharField(max_length=10, choices=approval_status, default='Pending')
 
 class IndividualProfileBasicInfo(models.Model):
-
-    studentId = models.ForeignKey(studentInfo, on_delete=models.CASCADE, primary_key=True)
+    individualProfileID = models.AutoField(primary_key=True)
+    studentId = models.ForeignKey(studentInfo, on_delete=models.CASCADE)
     studentPhoto = models.FileField(upload_to='media/studentPhoto')
     
     nickName = models.CharField(max_length=255)
@@ -311,7 +311,7 @@ class IndividualProfileBasicInfo(models.Model):
     personInCaseofEmergency = models.CharField(max_length=255)
     personInCaseofEmergencyRelationship = models.CharField(max_length=255)
     personInCaseofEmergencyAddress = models.CharField(max_length=255)
-    personInCaseofEmergencyLandline = models.CharField(max_length=255)
+    personInCaseofEmergencyLandline = models.CharField(max_length=255, default='')
     personInCaseofEmergencyMobileNo = models.CharField(max_length=255)
 
     # Healh Data
@@ -344,9 +344,9 @@ class IndividualProfileBasicInfo(models.Model):
     seniorHighSchoolAwardsRecieved = models.CharField(max_length=255)
     seniorHighSchoolYearGraduated = models.IntegerField()
 
-    collegeName = models.CharField(max_length=255)
-    collegeAwardsRecieved = models.CharField(max_length=255)
-    collegeYearGraduated = models.IntegerField()
+    collegeName = models.CharField(max_length=255, default='')
+    collegeAwardsRecieved = models.CharField(max_length=255, default='')
+    collegeYearGraduated = models.IntegerField(default=0)
 
 
     schoolLeaver = models.BooleanField()
@@ -412,3 +412,33 @@ class TestArray(models.Model):
 
 class FileUploadTest(models.Model):
     file = models.FileField()
+
+class IntakeInverView(models.Model):
+    individualProfileId = models.OneToOneField(IndividualProfileBasicInfo, on_delete=models.CASCADE, primary_key=True)
+
+    individualActivity = models.JSONField()
+    individualDateAccomplished = models.JSONField()
+    individualRemarks = models.JSONField()
+
+    appraisalTest = models.JSONField()
+    appraisalDateTaken = models.JSONField()
+    appraisalDateInterpreted = models.JSONField()
+    appraisalRemarks = models.JSONField()
+
+    counselingType = models.JSONField()
+    counselingDate = models.JSONField()
+    counselingConcern = models.JSONField()
+    counselingRemarks = models.JSONField()
+
+    followActivity = models.JSONField()
+    followDate = models.JSONField()
+    followRemarks = models.JSONField()
+
+    informationActivity = models.JSONField()
+    informationDate = models.JSONField()
+    informationRemarks = models.JSONField()
+
+    counsultationActivity = models.JSONField()
+    counsultationDate = models.JSONField()
+    counsultationRemarks = models.JSONField()
+    

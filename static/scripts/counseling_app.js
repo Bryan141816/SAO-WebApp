@@ -83,9 +83,6 @@ $(document).ready(function(){
                 success: function(response) {
                     let disabledTimes = response.counseling_schedules;
                     $('#id_scheduled_time option').prop('disabled', false); // Enable all options initially
-                    $('#id_scheduled_time option').prop('disabled', false).text(function () {
-                        return $(this).text().replace(' (occupied)', ''); // Remove existing "(occupied)" text
-                    }); // Enable all options initially
                     console.log(response)
                     $.each(disabledTimes, function(index, value) {
                         if (value.status !== 'declined') {

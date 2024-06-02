@@ -4,7 +4,7 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import CounselingSchedulerForm, IndividualProfileForm, FileUpload, UploadFileForm, ExitInterviewForm, OjtAssessmentForm
-from .models import TestArray, studentInfo, counseling_schedule, exit_interview_db, OjtAssessment
+from .models import TestArray, studentInfo, counseling_schedule, exit_interview_db, OjtAssessment, IndividualProfileBasicInfo, IntakeInverView
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -73,6 +73,7 @@ def individualProfile(request):
                 'Lovable', 'Jealous', 'Shy', 'Sarcastic', 'Tactful',
                 'Pessimistic', 'Submissive', 'Optimistic', 'Happy-go-lucky', 'Goal-oriented'
             ]
+            # This shit so slow but it works
 
             describeYouBest_checked = request.POST.getlist('describeYouBest[]')
     
@@ -116,6 +117,102 @@ def individualProfile(request):
         form = IndividualProfileForm()
     context = {'form': form}
     return render(request, 'individual_profile.html', context)
+
+def intake_interview_view(request):
+    if request.method == 'POST':
+        individualId = request.POST.get('individualId')
+
+        individualActivity = request.POST.getlist('individualActivity[]')
+        individualDateAccomplished = request.POST.getlist('individualAccomplished[]')
+        individualRemarks = request.POST.getlist('individualRemarks[]')
+
+        apprailsalTest = request.POST.getlist('appraisalTest[]')
+        apprailsalDateTaken = request.POST.getlist('appraisalDateTaken[]')
+        apprailsalDateInterpreted = request.POST.getlist('appraisalDateInterpreted[]')
+        apprailsalRemarks = request.POST.getlist('appraisalRemarks[]')
+
+        counseling_types = request.POST.getlist('couseling_type[]')
+        selected_types = []
+        
+        for ctype in counseling_types:
+            if ctype == 'True':
+                selected_types.append('Referral')
+            elif ctype == 'False':
+                selected_types.append('Walk-in')
+
+        counselingDate = request.POST.getlist('counselingDate[]')
+        counselingConcern = request.POST.getlist('counselingConcern[]')
+        counselingRemarks = request.POST.getlist('counselingRemarks[]')
+
+        followActivity = request.POST.getlist('followActivity[]')
+        followDate =     request.POST.getlist('followDate[]')
+        followRemarks =  request.POST.getlist('followRemarks[]')
+
+        informationActivity = request.POST.getlist('informationActivity[]')
+        informationDate =     request.POST.getlist('informationDate[]')
+        informationRemarks =  request.POST.getlist('informationRemarks[]')
+
+        counsultationActivity = request.POST.getlist('counseltationActivity[]')
+        counsultationDate =     request.POST.getlist('counseltationDate[]')
+        counsultationRemarks =  request.POST.getlist('counseltationRemarks[]')
+
+        individual = get_object_or_404(IndividualProfileBasicInfo, individualProfileID=individualId)
+
+        obj = IntakeInverView(
+            individualProfileId = individual,
+            individualActivity = individualActivity,
+            individualDateAccomplished = individualDateAccomplished,
+            individualRemarks = individualRemarks,
+
+            appraisalTest = apprailsalTest,
+            appraisalDateTaken = apprailsalDateTaken,
+            appraisalDateInterpreted = apprailsalDateInterpreted,
+            appraisalRemarks = apprailsalRemarks,
+
+            counselingType = selected_types,
+            counselingDate = counselingDate,
+            counselingConcern = counselingConcern,
+            counselingRemarks = counselingRemarks,
+
+            followActivity = followActivity,
+            followDate     = followDate,
+            followRemarks  = followRemarks,
+
+            informationActivity = informationActivity,
+            informationDate     = informationDate,    
+            informationRemarks  = informationRemarks,
+
+
+            counsultationActivity = counsultationActivity,
+            counsultationDate     = counsultationDate,    
+            counsultationRemarks  = counsultationRemarks,
+
+        )
+        obj.save()
+
+        return redirect('Intake Interview')
+
+    return render(request, 'intake_interview.html', {})
+
+def search_student_info_for_intake(request):
+     if request.method == 'POST':
+        id_number = request.POST.get('id_number', '')
+        try:
+            student = studentInfo.objects.get(studID = id_number)
+            individual = IndividualProfileBasicInfo.objects.filter(studentId = student)
+            items = []
+            for val in individual:
+                response = {
+                    'profile_number': val.individualProfileID,
+                    'studentid': val.studentId.studID,
+                    'name': f"{val.studentId.lastname}, {val.studentId.middlename}, {val.studentId.firstname}",
+                    'datefilled': val.dateFilled.strftime("%B %d, %Y")
+                }
+                items.append(response)
+
+            return JsonResponse({'response': items})
+        except studentInfo.DoesNotExist:
+            return JsonResponse({'error': 'Student not found'}, status=404)
 
 def counseling_app(request):
     if request.method == 'POST':
@@ -462,6 +559,9 @@ def update_counseling_schedule(request):
             message = f"Hello {obj.studentID.firstname.title()} {obj.studentID.lastname.title()} your Counseling Schedule request has been approved."
             email = obj.email
             obj.save()
+
+            #This shit takes longer to finish that my will to live
+
             send_mail(
                 'Counseling Schedule Request',
                 message,
