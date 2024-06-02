@@ -334,6 +334,8 @@ $(document).ready(function(){
 
     function validateFields(container) {
         var isValid = true;
+        var radioGroups = {};
+    
         container.find('input, select, textarea').each(function() {
             var $this = $(this);
             if ($this.prop('required')) {
@@ -344,12 +346,28 @@ $(document).ready(function(){
                     if (!emailPattern.test($this.val())) {
                         isValid = false;
                     }
+                } else if ($this.attr('type') === 'radio') {
+                    var name = $this.attr('name');
+                    if (!(name in radioGroups)) {
+                        radioGroups[name] = false;
+                    }
+                    if ($this.prop('checked')) {
+                        radioGroups[name] = true;
+                    }
                 }
             }
         });
+    
+        // Check if at least one radio button in each group is checked
+        Object.values(radioGroups).forEach(function(value) {
+            if (!value) {
+                isValid = false;
+            }
+        });
+    
         return isValid;
     }
-
+    
     $('.nextpage').on('click', function() {
         let current = $('.current-page-activated');
         let next = current.next('.fill_out_container');
