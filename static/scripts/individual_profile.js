@@ -17,6 +17,81 @@ $(document).ready(function(){
         $('#consent_container').removeClass('active');
     });
 
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    $('#searchButton').on('click', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+        
+        // Get the entered ID number
+        var idNumber = $('#studentIDBox').val();
+
+        // Send AJAX request to fetch student info
+        $.ajax({
+            url: '/search_student_info_for_individual_profile/',
+            method: 'POST',
+            data: {'id_number': idNumber},
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function(response) {
+                $('#info_table').removeClass('hidden')
+                $('#individualProfileForm').removeClass('hidden')
+
+                $('#student_id_val').val(response.student_id)
+                $('#info_table tr').empty();
+                
+                // Append new row with retrieved data
+                $('#info_table').append(
+                    '<tr id="info_table_head">'+
+                    '<th>NAME</th>'+
+                    '<th>COURSE</th>'+
+                    '<th>SEX</th>'+
+                    '</tr>'
+                );
+                let sex ="";
+                if(response.sex === "M"){
+                    sex = "Male";
+                }
+                else{
+                    sex = "Female";
+                }
+                $('#info_table').append(
+                    '<tr>' +
+                    '<td>' + response.name + '</td>' +
+                    '<td>' + `${response.program}` + '</td>' +
+                    '<td>' + sex + '</td>' +
+                    '</tr>'
+                );
+            },
+            error: function(error) {
+                $('#requestForm').addClass('hidden')
+                $('#info_table').removeClass('hidden')
+                $('#info_table').empty()
+                $('#info_table').append(
+                    '<tr>' +
+                    '<td colspan="4">Student ID not found.</td>' +
+                    '</tr>'
+                );
+            }
+        });
+    });
+
 
 
     $("#addanother").on("click", function(event){
@@ -52,18 +127,57 @@ $(document).ready(function(){
             $(this).closest("tr").find("input").val("");
         }
     });
+    $("#organizationTable").on("click", ".deleteRow", function(event) {
+        event.preventDefault();
+        var rowCount = $("#organizationTable tr.orgRowTemplate").length;
+        if (rowCount > 1) {
+            $(this).closest("tr").remove();
+        } else {
+            $(this).closest("tr").find("input").val("");
+            $('.inoutschool input[type="radio"]').prop('checked', false);
+        }
+    });
+    
 
     $("#addOrganization").on("click", function(event){
         event.preventDefault();
-        let newRow = $(".orgRowTemplate").clone(true);
-        newRow.removeClass("orgRowTemplate");
-        newRow.find('input').each(function() {
-            if ($(this).is(':radio') || $(this).is(':checkbox')) {
-                $(this).prop('checked', false);
-            } else {
-                $(this).val("");
-            }
-        });
+        let newRow = `<tr class="orgRowTemplate">
+                        <td>
+                            <div class="field_container">
+                                <input type="text" name="name_of_organization[]" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="inoutschool field_container">    
+                                <div id="inoutSchool" class="side-way"><div>
+                                    <label for="id_elementaryType_0"><input type="radio" name="inoutSchool[]" value="True" class="side-way" required="" id="inoutSchool_0">
+                                        Yes
+                                    </label>
+                                
+                                </div>
+                                <div id="inoutSchool" class="side-way">
+                                    <label for="id_elementaryType_1"><input type="radio" name="inoutSchool[]" value="False" class="side-way" required="" id="inoutSchool_1">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="field_container">
+                                <input type="text" name="position[]">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="field_container">
+                                <input type="text" name="inclusiveyears[]">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="field_container">
+                                <button class="deleteRow OrangeButton">Delete</button>
+                            </div>
+                        </td>
+                    </tr>`;
         $("#organizationTable").append(newRow);
     });
     $("#id_sourceOfIncome").change(function(event){
@@ -161,13 +275,11 @@ $(document).ready(function(){
     $("#id_schoolLeaver_0").change(function(event){
         if($(this).val()){
             $("#reasonOfLeaving").removeClass("hidden")
-            $("#reasonOfLeaving").addClass("visible")
         }
     });
     $("#id_schoolLeaver_1").change(function(event){
         if($(this).val()){
             $("#reasonOfLeaving").addClass("hidden")
-            $("#reasonOfLeaving").removeClass("visible")
         }
     });
     
@@ -176,10 +288,14 @@ $(document).ready(function(){
         
         console.log(selectedValue)
         if(selectedValue == "scholarship"){
-            $("#scholarshiptype").removeClass("hidden")
+            $("#scholarship").removeClass("hidden")
+            $("#id_typeOfScholarship").attr("required","required")
+            $("#id_specifyScholarship").attr("required","required")
         }
         else{
-            $("#scholarshiptype").addClass("hidden")
+            $("#scholarship").addClass("hidden")
+            $("#id_typeOfScholarship").removeAttr("required","required")
+            $("#id_specifyScholarship").removeAttr("required","required")
         }
     });
     $("#id_typeOfScholarship").change(function(event){
@@ -195,21 +311,39 @@ $(document).ready(function(){
     });
     $("#id_doYouPlanToWork_0").change(function(event){
         if($(this).val()){
-            $("#spificyWhyDontPlantToWork").addClass("hidden")
+            $("#specifyDontWork").addClass("hidden")
+            $('#id_specifyIfNo').removeAttr('required', 'required');
         }
     });
     $("#id_doYouPlanToWork_1").change(function(event){
         if($(this).val()){
-            $("#spificyWhyDontPlantToWork").removeClass("hidden")
+            $("#specifyDontWork").removeClass("hidden")
+            $('#id_specifyIfNo').attr('required', 'required');
         }
     });
+    $("#id_decisionForTheCourse").change(function(event){
+        let selectedValue = $(this).val();
+        if(selectedValue != "self"){
+            $("#preferedCourse").removeClass('hidden')
+        }
+        else{
+            $("#preferedCourse").addClass('hidden')
+        }
+    });
+    
 
     function validateFields(container) {
         var isValid = true;
         container.find('input, select, textarea').each(function() {
-            if ($(this).prop('required')) {
-                if (!$(this).val()) {
+            var $this = $(this);
+            if ($this.prop('required')) {
+                if (!$this.val()) {
                     isValid = false;
+                } else if ($this.attr('type') === 'email') {
+                    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                    if (!emailPattern.test($this.val())) {
+                        isValid = false;
+                    }
                 }
             }
         });
@@ -222,25 +356,17 @@ $(document).ready(function(){
         let curret_page_counter = $('.current-fill-out');
         let next_page_counter = curret_page_counter.next('.page_viewer');
 
-        current.removeClass('current-page-activated').addClass('current-page-deactivated');
-        curret_page_counter.removeClass('current-fill-out');
-        next_page_counter.addClass('current-fill-out');
-        setTimeout(function() {
-            current.addClass('hidden');
-            next.removeClass('hidden').addClass('current-page-activated');
-            current.removeClass('current-page-deactivated');
-        }, 200);
 
-        // if(validateFields(current)){
-        //     current.removeClass('current-page-activated').addClass('current-page-deactivated');
-        //     curret_page_counter.removeClass('current-fill-out');
-        //     next_page_counter.addClass('current-fill-out');
-        //     setTimeout(function() {
-        //         current.addClass('hidden');
-        //         next.removeClass('hidden').addClass('current-page-activated');
-        //         current.removeClass('current-page-deactivated');
-        //     }, 200);
-        // }
+        if(validateFields(current)){
+            current.removeClass('current-page-activated').addClass('current-page-deactivated');
+            curret_page_counter.removeClass('current-fill-out');
+            next_page_counter.addClass('current-fill-out');
+            setTimeout(function() {
+                current.addClass('hidden');
+                next.removeClass('hidden').addClass('current-page-activated');
+                current.removeClass('current-page-deactivated');
+            }, 200);
+        }
     });
     $('.prevPage').on('click',()=>{
         let current = $('.current-page-activated');

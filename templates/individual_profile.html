@@ -22,7 +22,6 @@
     
 
     <div class="container">
-        {{form.errors}}
         <h3>GUIDANCE</h3>
         <span><label id="dir-gray">Home</label><label id="dir-orange"> > Individual Profile </label></span>
         <div class="form-container">
@@ -43,11 +42,13 @@
                     <tr id="info_table_head">
                         <th>NAME</th>
                         <th>COURSE</th>
-                        <th>Sex</th>
+                        <th>SEX</th>
                     </tr>
                 </table>
             </form>
-            <form method="post" action="" id="requestForm" class="">
+            <form method="post" action="" id="individualProfileForm" class="hidden" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="student_id_val" name="student_id_val">
                 <div class="page_counter_container">
                     <div class="page_viewer current-fill-out">1</div>
                     <div class="page_viewer">2</div>
@@ -58,8 +59,8 @@
                     <div class="page_viewer">7</div>
                     <div class="page_viewer">8</div>
                     <div class="page_viewer">9</div>
+                    <div class="page_viewer">10</div>
                 </div>
-                {% csrf_token %}
                 <div class="slider">
                     
                     <div class="fill_out_container current-page-activated">
@@ -282,16 +283,297 @@
                         </div>
                     </div>
                     <div class="fill_out_container hidden">
-                        <h2>B. Family Data</h2>
+                        <h2>C. Contact Persons</h2>
+                        <div class="two_input_container">
+                            <label>Enter a person to be notified in case of emergency.</label>
+                            <label>What is your relationship with said person?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.personInCaseofEmergency}}
+                            {{form.personInCaseofEmergencyRelationship}}
+                        </div>
+                        <label>What is the address with said person?</label>
+                        {{form.personInCaseofEmergencyAddress}}
+                        <div class="two_input_container">
+                            <label>Enter Landline number <label style="color:rgb(0, 4, 255);">* leave it blank if they don't have any.</label></label>
+                            <label>Enter mobile number</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.personInCaseofEmergencyLandline}}
+                            {{form.personInCaseofEmergencyMobileNo}}
+                        </div>
                         <div class="center_object">
                             <button class="OrangeButton prevPage">Previous</button>
                             <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>D. Health Data</h2>
+                        <label>Do you have any disabilities/impairments?</label>
+                        {{form.disabilies}}
+                        <div class="two_input_container">
+                            <label>Do you have any allergies?</label>
+                            <label>What is your blood type?</label>
+                        </div>
+                        <div class="two_input_container">
+                            {{form.allergies}}
+                            {{form.bloodType}}
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>E. Educational Background</h2>
+                        <table id="educational_awards">
+                            <tr>
+                                <th class="firstitem"></th>
+                                <th>Name of School/Address</th>
+                                <th>Awards/Honors Received</th>
+                                <th>Year Graduated</th>
+                            </tr>
+                            <tr>
+                                <td class="firstitem">
+                                    <div class="field_container">
+                                        Elementary
+                                        {{form.elementaryType}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.elementaryName}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.elementaryAwardsRecieved}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.elementaryYearGraduated}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="firstitem">
+                                    <div class="field_container">
+                                        Senior High School:
+                                        {{form.seniorHighSchoolType}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.seniorHighSchoolName}}
+                                    </div>
+                                </td>
+                                    
+                                <td>
+                                    <div class="field_container">
+                                        {{form.seniorHighSchoolAwardsRecieved}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.seniorHighSchoolYearGraduated}}
+                                    </div>  
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="firstitem">
+                                    College (If Transferee)
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.collegeName}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.collegeAwardsRecieved}}
+                                    </div>    
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        {{form.collegeYearGraduated}}</td>
+                                    </div>
+                            </tr>
+                        </table>
+                        <div class="yes_no_question_cotainer">
+                            <label>Where you a school leaver?</label>
+                            {{form.schoolLeaver}}
+                        </div>
+                        <div class="others_container hidden" id="reasonOfLeaving">
+                            <label>What is the reason of you leaving?</label> 
+                            {{form.schoolLeaverWhy}}
+                        </div>
+                        <label>Who if financially supporting your studies?</label>
+                        {{form.finaciallySupporting}}
+                        <div id="scholarship" class="others_container hidden">
+                            <label>What scholarship do you have?</label> 
+                            {{form.typeOfScholarship}}
+                            <label>Please Specify:</label>
+                            {{form.specifyScholarship}}
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>F. Memebership In Organization/s</h2>
+                        <table id="organizationTable">
+                            <tr>
+                                <th>Name of Organization</th>
+                                <th>In School/Outside School</th>
+                                <th>Position / Title</th>
+                                <th>Inclusive Years</th>
+                            </tr>
+                            <tr class="orgRowTemplate">
+                                <td>
+                                    <div class="field_container">
+                                        <input type="text" name="name_of_organization[]" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="inoutschool field_container">    
+                                        <div id="inoutSchool" class="side-way"><div>
+                                            <label for="id_elementaryType_0"><input type="radio" name="inoutSchool[]" value="True" class="side-way" required="" id="inoutSchool_0">
+                                                Yes
+                                            </label>
+                                        
+                                        </div>
+                                        <div id="inoutSchool" class="side-way">
+                                            <label for="id_elementaryType_1"><input type="radio" name="inoutSchool[]" value="False" class="side-way" required="" id="inoutSchool_1">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <input type="text" name="position[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <input type="text" name="inclusiveyears[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field_container">
+                                        <button class="deleteRow OrangeButton">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="center_object">
+                            <button id="addOrganization" class="OrangeButton">Add Organization</button>
+                        </div>
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>G. Unique Features</h2>
+                        <label>Do you have any special skills/talents?</label>
+                        {{form.specialSkill}}
+                        <label>What are your ambitions/goals?</label>
+                        {{form.goals}}
+                        <label>Do you have any present concerns/problems?</label>
+                        {{form.presentConcerns}}
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>H. Student's General Personality Make-Up</h2>
+                        <label>Please select any of this following items taht describe you best.</label>
+                        <table>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Friendly">Friendly</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Self-Confident">Self-Confident</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Calm">Calm</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Quick-Tempered">Quick-Tempered</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Feels Inferior">Feels Inferior</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Unhappy">Unhappy</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Easily Bored">Easily Bored</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Talented">Talented</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Withdrawn">Withdrawn</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Conscientious">Conscientious</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Talkative">Talkative</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Cheerful">Cheerful</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Moody">Moody</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Easily Exhausted">Easily Exhausted</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Lazy">Lazy</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Sensitive">Sensitive</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Poor health">Poor health</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Received">Reserved</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Quiet">Quiet</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Independent">Independent</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Depressed">Depressed</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Suspicious">Suspicious</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Irritable">Irritable</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Stubborn">Stubborn</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Thoughtful">Thoughtful</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Lovable">Lovable</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Jealous">Jealous</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Shy">Shy</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Sarcastic">Sarcastic</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Tactful">Tactful</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Pessimistic">Pessimistic</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Submissive">Submissive</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Optimistic">Optimistic</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Happy-go-lucky">Happy-go-lucky</td>
+                                <td><input type="checkbox" name="describeYouBest[]" value="Goal-oriented">Goal-oriented</td>
+                            </tr>
+                        </table>
+                        <label>Is there other things describe you the best? <label style="color: rgb(0, 4, 255);">* please specify</label></label>
+                        {{form.describeYouBestOther}}
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton nextpage">Next</button>
+                        </div>
+                    </div>
+                    <div class="fill_out_container hidden">
+                        <h2>I. School/Career-Related</h2>
+                        <label>Whose decision was it to take this college course?</label>
+                        {{form.decisionForTheCourse}}
+                        <div class="others_container hidden" id="preferedCourse">
+                            <label >If you did not choose your current course, which course do you prefer?</label>
+                            {{form.specifyTheDecision}}
+                        </div>
+                        <label>Do you plan to work on your specizlization after graduation?</label>
+                        {{form.doYouPlanToWork}}
+                        <div class="others_container hidden" id="specifyDontWork">
+                            <label>Specify why:</label>
+                            {{form.specifyIfNo}}
+                        </div>
+                        <label>What possible factors will hinder you to continue your college education?</label>
+                        {{form.possibleFactors}}
+                        <div class="center_object">
+                            <button class="OrangeButton prevPage">Previous</button>
+                            <button class="OrangeButton" type="submit">Submit</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    {{form.errors}}
     <script src="{% static 'scripts/individual_profile.js'%}"></script>
 {% endblock %}

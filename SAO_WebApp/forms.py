@@ -109,9 +109,8 @@ class IndividualProfileForm(forms.ModelForm):
 
     class Meta:
         model = IndividualProfileBasicInfo
-        exclude = ['siblingsName','siblingsAge','siblingsSchoolWork','nameOfOrganization','inOutSchool','positionTitle','inclusiveYears','describeYouBest']
+        exclude = ['age','dateFilled','studentId','siblingsName','siblingsAge','siblingsSchoolWork','nameOfOrganization','inOutSchool','positionTitle','inclusiveYears','describeYouBest']
         widgets ={
-            'dateFilled': forms.DateInput(attrs={'type':'date'}),
             'dateOfBirth': forms.DateInput(attrs={'type':'date'}),
             'fatherDateOfBirth': forms.DateInput(attrs={'type':'date'}),
             'motherDateOfBirth': forms.DateInput(attrs={'type':'date'}),

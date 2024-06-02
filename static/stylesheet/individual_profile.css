@@ -59,7 +59,8 @@
   color: white;
   border: none;
   border-radius: 5px;
-  width: 100px;
+  min-width: 100px;
+  max-width: max-content;
 }
 #info_table {
   border-collapse: collapse;
@@ -105,7 +106,9 @@
   display: none !important;
 }
 
-
+.inoutschool{
+  background-color: #DDDFEE;
+}
 .field_container input, .field_container2 input{
     border: 1px solid black !important;
     border-radius: 0 !important;
@@ -173,7 +176,7 @@
     display: flex;
 }
 .firstitem{
-    width: 40%;
+    width: 25%;
 }
 .inoutschool{
     border: 1px solid black !important;
@@ -280,7 +283,57 @@
   gap: 10px;
   width: 100%;
 }
-
+#educational_awards div{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  & div{
+    width: max-content !important;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+  }
+  & label{
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    gap: 5px;
+    height: 30px;
+    width: max-content;
+  }
+  & input[type="radio"]{
+    height: 15px;
+    width: 15px;
+  }
+}
+.yes_no_question_cotainer{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: flex-start;
+  & div{
+    width: max-content !important;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+  }
+  & label{
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    gap: 5px;
+    height: 30px;
+    width: max-content;
+  }
+  & input[type="radio"]{
+    height: 15px;
+    width: 15px;
+  }
+}
 .center_object{
   display: flex;
   width: 100%;

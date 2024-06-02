@@ -136,7 +136,7 @@ class counseling_schedule(models.Model):
 
 class IndividualProfileBasicInfo(models.Model):
 
-    studentId = models.ForeignKey(studentInfo, on_delete=models.CASCADE)
+    studentId = models.ForeignKey(studentInfo, on_delete=models.CASCADE, primary_key=True)
     studentPhoto = models.FileField(upload_to='media/studentPhoto')
     
     nickName = models.CharField(max_length=255)
@@ -369,7 +369,7 @@ class IndividualProfileBasicInfo(models.Model):
         ('organizations',' Scholarships granted by organizations within CTU'),
     ]
 
-    typeOfScholarship = models.CharField(max_length=100,  choices=typeOfScholarshipChoices, default='')
+    typeOfScholarship = models.CharField(max_length=100,  choices=typeOfScholarshipChoices)
     specifyScholarship = models.CharField(max_length=255, default='')
     
     # Membership in organizations

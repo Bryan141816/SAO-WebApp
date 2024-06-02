@@ -44,53 +44,78 @@ def upload_file(request):
 def home(request):
 	return render(request, 'main.html',{})
 
+def calculate_age(birth_date):
+    today = datetime.today()
+    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    return age
+
 def individualProfile(request):
-	if request.method == 'POST':
+    if request.method == 'POST':
+        form = IndividualProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            siblings_name = request.POST.getlist('name[]')
+            siblings_age = request.POST.getlist('age[]')
+            siblings_placework = request.POST.getlist('placework[]')
 
-		form = IndividualProfileForm(request.POST, request.FILES)
-		if form.is_valid():
-			siblings_name = request.POST.getlist('name[]')
-			siblings_age = request.POST.getlist('age[]')
-			siblings_placework = request.POST.getlist('placework[]')
-			
-			name_of_organization = request.POST.getlist('name_of_organization[]')
-			in_out_school = request.POST.getlist('inoutSchool[]')
-			position = request.POST.getlist('position[]')
-			inclusive_years = request.POST.getlist('inclusiveyears[]')
+            name_of_organization = request.POST.getlist('name_of_organization[]')
+            in_out_school = request.POST.getlist('inoutSchool[]')
+            position = request.POST.getlist('position[]')
+            inclusive_years = request.POST.getlist('inclusiveyears[]')
 
-			describeYouBest_values = [
-				'Friendly', 'Self-Confident', 'Calm', 'Quick-Tempered', 'Feels Inferior',
-				'Unhappy', 'Easily Bored', 'Talented', 'Withdrawn', 'Conscientious',
-				'Talkative', 'Cheerful', 'Moody', 'Easily Exhausted', 'Lazy',
-				'Sensitive', 'Poor health', 'Reserved', 'Quiet', 'Independent',
-				'Depressed', 'Suspicious', 'Irritable', 'Stubborn', 'Thoughtful',
-				'Lovable', 'Jealous', 'Shy', 'Sarcastic', 'Tactful',
-				'Pessimistic', 'Submissive', 'Optimistic', 'Happy-go-lucky', 'Goal-oriented'
-			]
+            current_datetime = timezone.now()
 
-			describeYouBest_checked = request.POST.getlist('describeYouBest[]')
+            describeYouBest_values = [
+                'Friendly', 'Self-Confident', 'Calm', 'Quick-Tempered', 'Feels Inferior',
+                'Unhappy', 'Easily Bored', 'Talented', 'Withdrawn', 'Conscientious',
+                'Talkative', 'Cheerful', 'Moody', 'Easily Exhausted', 'Lazy',
+                'Sensitive', 'Poor health', 'Reserved', 'Quiet', 'Independent',
+                'Depressed', 'Suspicious', 'Irritable', 'Stubborn', 'Thoughtful',
+                'Lovable', 'Jealous', 'Shy', 'Sarcastic', 'Tactful',
+                'Pessimistic', 'Submissive', 'Optimistic', 'Happy-go-lucky', 'Goal-oriented'
+            ]
 
-			# Create a dictionary to store the state (checked or not) of each value
-			describeYouBest_state = {value: value in describeYouBest_checked for value in describeYouBest_values}
+            describeYouBest_checked = request.POST.getlist('describeYouBest[]')
+    
+            student_id = request.POST.get('student_id_val')
+            
+            date_of_birth_str = form.cleaned_data['dateOfBirth']
+            date_of_birth = datetime.strptime(str(date_of_birth_str), '%Y-%m-%d')
+            age = calculate_age(date_of_birth)
 
-			new_form = form.save(commit=False)
-			new_form.siblingsName = siblings_name
-			new_form.siblingsAge = siblings_age
-			new_form.siblingsSchoolWork = siblings_placework
 
-			# Assuming the other fields are also JSONFields
-			new_form.nameOfOrganization = name_of_organization
-			new_form.inOutSchool = in_out_school
-			new_form.positionTitle = position
-			new_form.inclusiveYears = inclusive_years
-			new_form.describeYouBest = describeYouBest_state
 
-			new_form.save()
-			return redirect('Good Moral')
-	else:
-		form = IndividualProfileForm()
-	context = {'form': form}
-	return render(request, 'individual_profile.html',context)
+            # Get the studentInfo instance corresponding to the provided student ID
+            student = get_object_or_404(studentInfo, studID=student_id)
+
+            # Create a dictionary to store the state (checked or not) of each value
+            describeYouBest_state = {value: value in describeYouBest_checked for value in describeYouBest_values}
+
+            new_form = form.save(commit=False)
+            new_form.age = age
+            new_form.studentId = student
+            new_form.dateFilled = current_datetime
+            new_form.siblingsName = siblings_name
+            new_form.siblingsAge = siblings_age
+            new_form.siblingsSchoolWork = siblings_placework
+
+            # Assuming the other fields are also JSONFields
+            new_form.nameOfOrganization = name_of_organization
+            new_form.inOutSchool = in_out_school
+            new_form.positionTitle = position
+            new_form.inclusiveYears = inclusive_years
+            new_form.describeYouBest = describeYouBest_state
+
+            # Handle the studentPhoto field
+            if 'studentPhoto' in request.FILES:
+                new_form.studentPhoto = request.FILES['studentPhoto']
+
+            new_form.save()
+            messages.success(request, 'Your request has been successfully added. An email will be sent if it is accepted.')
+            return redirect('Individual Profile')
+    else:
+        form = IndividualProfileForm()
+    context = {'form': form}
+    return render(request, 'individual_profile.html', context)
 
 def counseling_app(request):
     if request.method == 'POST':
@@ -296,6 +321,22 @@ def check_date_time_validity_for_exit(request):
         except ValueError:
             # Handle invalid date format
             return JsonResponse({'error': 'Invalid date format'}, status=400)
+def search_student_info_for_individual(request):
+     if request.method == 'POST':
+        id_number = request.POST.get('id_number', '')
+        try:
+            student = studentInfo.objects.get(studID=id_number)
+            response = {
+				'student_id': student.studID,
+				'name': f"{(student.lastname).title()}, {(student.middlename).title()}, {(student.firstname.title())}",
+				'program':student.degree,
+                'sex':student.sex,
+        	}
+            return JsonResponse(response)
+        except studentInfo.DoesNotExist:
+            return JsonResponse({'error': 'Student not found'}, status=404)
+
+
 
 def search_student_info(request):
     if request.method == 'POST':
